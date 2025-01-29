@@ -1,0 +1,14 @@
+name: Target Repository Workflow
+on:
+  repository_dispatch:
+    types: [trigger-workflow]
+jobs:
+  run-tasks:
+    if: startsWith(github.event.client_payload.branch, 'release_') || github.event.client_payload.branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run tasks
+        run: echo "Running tasks on branch ${{ github.event.client_payload.branch }}..."
