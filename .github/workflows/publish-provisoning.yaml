@@ -4,7 +4,6 @@ on:
     types: [trigger-workflow]
 jobs:
   run-tasks:
-    if: startsWith(github.event.client_payload.branch, 'release_') || github.event.client_payload.branch == 'main'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
