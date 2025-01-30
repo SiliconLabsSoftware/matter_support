@@ -1,7 +1,7 @@
 name: Publish provisioning librairies
 on:
   repository_dispatch:
-    types: [trigger-workflow]
+    types: [trigger-publish-provisioning-libs]
   workflow_dispatch:
     
 permissions:
