@@ -1,14 +1,102 @@
-name: Target Repository Workflow
+name: Publish provisioning librairies
 on:
   repository_dispatch:
     types: [trigger-workflow]
+  workflow_dispatch:
+    
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
-  run-tasks:
+  publish-libs:
     if: startsWith(github.event.client_payload.branch, 'release_') || github.event.client_payload.branch == 'main'
     runs-on: ubuntu-latest
+
+    concurrency:
+      group: ${{ github.event.client_payload.branch }}-publish-provisioning-libs
+      cancel-in-progress: true
+
+    env:
+      PLATFORMS: '["MG24", "MGM24", "MG26", "SI917", "SI917_PSA"]'
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.client_payload.branch }}
 
-      - name: Run tasks
-        run: echo "Running tasks on branch ${{ github.event.client_payload.branch }}..."
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+  
+      - name: Install unzipper package
+        run: npm install unzipper
+
+      - name: Download Built Libraries
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          script: |
+            const platforms = JSON.parse(process.env.PLATFORMS);
+            const provisioningRepo = 'matter_provisioning';
+            
+            const fs = require('fs');
+            const path = require('path');
+            const unzipper = require('unzipper');
+
+            for (const platform of platforms) {
+              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
+              const filePath = path.join(downloadPath, `built-libraries-${platform}.zip`);
+
+              const artifacts = await github.rest.actions.listArtifactsForRepo({
+                owner: context.repo.owner,
+                repo: provisioningRepo
+              });
+
+              const platformArtifacts = artifacts.data.artifacts
+                .filter(a => a.name === `built-libraries-${platform}`)
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+              if (platformArtifacts.length === 0) {
+                core.setFailed(`Artifact for ${platform} not found`);
+                return;
+              }
+
+              const latestArtifact = platformArtifacts[0];
+
+              const { data: artifactData } = await github.rest.actions.downloadArtifact({
+                owner: context.repo.owner,
+                repo: provisioningRepo,
+                artifact_id: latestArtifact.id,
+                archive_format: 'zip'
+              });
+
+              fs.mkdirSync(downloadPath, { recursive: true });
+              fs.writeFileSync(filePath, Buffer.from(artifactData));
+
+              fs.createReadStream(filePath)
+                .pipe(unzipper.Extract({ path: downloadPath }))
+                .on('close', () => {
+                  console.log(`Downloaded and extracted artifact for ${platform} to ${downloadPath}`);
+                  fs.unlinkSync(filePath); // Delete the .zip file after extraction
+                })
+                .on('error', (error) => {
+                  console.error(`Error extracting artifact for ${platform}:`, error);
+                  core.setFailed(`Failed to extract artifact for ${platform}: ${error.message}`);
+                });
+            }
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: automation/update_librairies
+          base: ${{ github.event.client_payload.branch }}
+          title: "Update provisioning libraries and headers"
+          body: "This PR updates the provisioning libraries and headers."
+          commit-message: "Update provisioning libraries"
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          add-paths: 'matter_support/provision'  
