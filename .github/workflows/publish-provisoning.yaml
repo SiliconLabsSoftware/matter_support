@@ -74,7 +74,7 @@ jobs:
                 fs.unlinkSync(filePath); // Delete the .zip file after extraction
               })
               .on('error', (error) => {
-                console.error(`Error extracting ${artifactName}:`, error);
+                console.error(`Error extracting ${artifactName}: ${error.message}`);
                 core.setFailed(`Failed to extract ${artifactName}: ${error.message}`);
               });
           }" > downloadAndExtractArtifact.js
