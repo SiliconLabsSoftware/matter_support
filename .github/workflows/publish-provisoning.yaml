@@ -93,7 +93,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: automation/update_${{ github.event.client_payload.branch }}_libraries
+          branch: automation/update_${{ github.event.client_payload.branch }}_provisioning
           base: ${{ github.event.client_payload.branch }}
           title: "Update provisioning libraries and headers for ${{ github.event.client_payload.branch }}"
           body: "This PR updates the provisioning libraries and headers for the ${{ github.event.client_payload.branch }} branch."
