@@ -87,11 +87,11 @@ jobs:
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
           script: |           
             const path = require('path');
+            const downloadAndExtractArtifact = require('./downloadAndExtractArtifactSource');
 
             const platforms = JSON.parse(process.env.PLATFORMS);
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifactSource');
 
             for (const platform of platforms) {
               const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
@@ -107,10 +107,10 @@ jobs:
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
           script: |
             const path = require('path');
+            const downloadAndExtractArtifact = require('./downloadAndExtractArtifactSource');
             
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifactSource');
 
             const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/headers');
             const filePath = path.join(downloadPath, 'headers.zip');
