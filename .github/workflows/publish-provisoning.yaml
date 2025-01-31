@@ -95,7 +95,7 @@ jobs:
             const branch = process.env.BRANCH;
 
             for (const platform of platforms) {
-              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
+              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/lib');
               const filePath = path.join(downloadPath, `built-libraries-${platform}.zip`);
               await downloadAndExtractArtifact(github, core, `built-libraries-${platform}`, downloadPath, filePath, branch);
             }
@@ -111,7 +111,7 @@ jobs:
             const downloadAndExtractArtifact = require('./downloadAndExtractArtifactSource');            
             const branch = process.env.BRANCH;
 
-            const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/headers');
+            const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/headers');
             const filePath = path.join(downloadPath, 'headers.zip');
             await downloadAndExtractArtifact(github, core, 'headers', downloadPath, filePath, branch);
 
