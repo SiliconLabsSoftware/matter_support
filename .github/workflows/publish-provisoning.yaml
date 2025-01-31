@@ -30,13 +30,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-  
+          
+      # Used in the javascript code
       - name: Install unzipper package
         run: npm install unzipper
 
       - name: Download Built Libraries
         uses: actions/github-script@v7
         env:
+          PLATFORMS: ${{ env.PLATFORMS }}
           BRANCH: ${{ github.event.client_payload.branch }}
         with:
           github-token: ${{ secrets.WORKFLOW_TOKEN }}
@@ -44,53 +46,22 @@ jobs:
             const platforms = JSON.parse(process.env.PLATFORMS);
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            
-            const fs = require('fs');
-            const path = require('path');
-            const unzipper = require('unzipper');
+            const { downloadAndExtractArtifact } = require('./.github/actions/download-artifact/index.js');
 
             for (const platform of platforms) {
               const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
               const filePath = path.join(downloadPath, `built-libraries-${platform}.zip`);
-
-              const artifacts = await github.rest.actions.listArtifactsForRepo({
-                owner: context.repo.owner,
-                repo: provisioningRepo,
-                ref: branch
-              });
-
-              const platformArtifacts = artifacts.data.artifacts
-                .filter(a => a.name === `built-libraries-${platform}`)
-                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-              if (platformArtifacts.length === 0) {
-                core.setFailed(`Artifact for ${platform} not found`);
-                return;
-              }
-
-              const latestArtifact = platformArtifacts[0];
-
-              const { data: artifactData } = await github.rest.actions.downloadArtifact({
-                owner: context.repo.owner,
-                repo: provisioningRepo,
-                artifact_id: latestArtifact.id,
-                archive_format: 'zip'
-              });
-
-              fs.mkdirSync(downloadPath, { recursive: true });
-              fs.writeFileSync(filePath, Buffer.from(artifactData));
-
-              fs.createReadStream(filePath)
-                .pipe(unzipper.Extract({ path: downloadPath }))
-                .on('close', () => {
-                  console.log(`Downloaded and extracted artifact for ${platform} to ${downloadPath}`);
-                  fs.unlinkSync(filePath); // Delete the .zip file after extraction
-                })
-                .on('error', (error) => {
-                  console.error(`Error extracting artifact for ${platform}:`, error);
-                  core.setFailed(`Failed to extract artifact for ${platform}: ${error.message}`);
-                });
+              await downloadAndExtractArtifact(github, core, `built-libraries-${platform}`, downloadPath, filePath, provisioningRepo, branch);
             }
+
+      - name: Download Headers
+        uses: ./.github/actions/download-artifact
+        with:
+          artifact-name: headers
+          download-path: ${{ github.workspace }}/matter_support/provision/headers
+          file-path: ${{ github.workspace }}/matter_support/provision/headers/headers.zip
+          provisioning-repo: matter_provisioning
+          branch: ${{ github.event.client_payload.branch }}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7

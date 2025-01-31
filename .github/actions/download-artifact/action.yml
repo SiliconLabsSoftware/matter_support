@@ -1,0 +1,21 @@
+name: 'Download and Extract Artifact'
+description: 'Downloads and extracts a specified artifact from a GitHub repository'
+inputs:
+  artifact-name:
+    description: 'The name of the artifact to download'
+    required: true
+  download-path:
+    description: 'The path to download the artifact to'
+    required: true
+  file-path:
+    description: 'The path to save the downloaded artifact file'
+    required: true
+  provisioning-repo:
+    description: 'The repository containing the artifact'
+    required: true
+  branch:
+    description: 'The branch to download the artifact from'
+    required: true
+runs:
+  using: 'node20'
+  main: 'index.js'
