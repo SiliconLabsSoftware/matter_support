@@ -91,7 +91,7 @@ jobs:
             const platforms = JSON.parse(process.env.PLATFORMS);
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifact.js');
+            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifact');
 
             for (const platform of platforms) {
               const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
