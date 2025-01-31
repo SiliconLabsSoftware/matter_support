@@ -52,7 +52,8 @@ jobs:
 
               const artifacts = await github.rest.actions.listArtifactsForRepo({
                 owner: context.repo.owner,
-                repo: provisioningRepo
+                repo: provisioningRepo,
+                ref: github.event.client_payload.branch
               });
 
               const platformArtifacts = artifacts.data.artifacts
@@ -99,4 +100,4 @@ jobs:
           commit-message: "Update provisioning libraries and headers"
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          add-paths: 'matter_support/provision'  
+          add-paths: 'matter_support/provision'
