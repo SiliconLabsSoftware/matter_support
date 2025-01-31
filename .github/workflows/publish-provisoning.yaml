@@ -95,7 +95,7 @@ jobs:
             const branch = process.env.BRANCH;
 
             for (const platform of platforms) {
-              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/lib');
+              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/libs');
               const filePath = path.join(downloadPath, `built-libraries-${platform}.zip`);
               await downloadAndExtractArtifact(github, core, `built-libraries-${platform}`, downloadPath, filePath, branch);
             }
