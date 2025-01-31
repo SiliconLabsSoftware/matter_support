@@ -77,7 +77,7 @@ jobs:
                 console.error(`Error extracting ${artifactName}: ${error.message}`);
                 core.setFailed(`Failed to extract ${artifactName}: ${error.message}`);
               });
-          }" > downloadAndExtractArtifact.js
+          }" > downloadAndExtractArtifactSource.js
 
       - name: Download Built Libraries
         uses: actions/github-script@v7
@@ -91,7 +91,7 @@ jobs:
             const platforms = JSON.parse(process.env.PLATFORMS);
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifact');
+            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifactSource');
 
             for (const platform of platforms) {
               const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/lib');
@@ -110,7 +110,7 @@ jobs:
             
             const provisioningRepo = 'matter_provisioning';
             const branch = process.env.BRANCH;
-            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifact');
+            const { downloadAndExtractArtifact } = require('./downloadAndExtractArtifactSource');
 
             const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'matter_support/provision/headers');
             const filePath = path.join(downloadPath, 'headers.zip');
