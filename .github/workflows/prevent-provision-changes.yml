@@ -1,0 +1,34 @@
+name: Prevent Provision Directory Changes
+
+on:
+  pull_request:
+    branches:
+      - main
+      - 'release_*'
+
+jobs:
+  verify-changed-files:
+    if: ${{ github.actor != 'github-actions[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get list of changed files and check for unauthorized changes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number
+            });
+
+            const changedFiles = files.map(file => file.filename);
+            console.log('Changed files:', changedFiles);
+
+            const unauthorizedChanges = changedFiles.some(file => file.startsWith('provision/'));
+            if (unauthorizedChanges) {
+              core.setFailed(`Unauthorized changes detected in the provision/ directory by ${context.actor}`);
+            }
