@@ -16,6 +16,9 @@ inputs:
   branch:
     description: 'The branch to download the artifact from'
     required: true
+  github-token:
+    description: 'GitHub token for authentication'
+    required: true
 runs:
   using: 'node20'
   main: 'index.js'

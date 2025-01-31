@@ -3,10 +3,11 @@ const github = require('@actions/github');
 const fs = require('fs');
 const unzipper = require('unzipper');
 
-async function downloadAndExtractArtifact(artifactName, downloadPath, filePath, provisioningRepo, branch) {
+async function downloadAndExtractArtifact(artifactName, downloadPath, filePath, provisioningRepo, branch, githubToken) {
   try {
+    const octokit = github.getOctokit(githubToken);
     // List all artifacts for the specified repository and branch
-    const artifacts = await github.rest.actions.listArtifactsForRepo({
+    const artifacts = await octokit.rest.actions.listArtifactsForRepo({
       owner: github.context.repo.owner,
       repo: provisioningRepo,
       ref: branch
@@ -26,7 +27,7 @@ async function downloadAndExtractArtifact(artifactName, downloadPath, filePath, 
     const latestArtifact = filteredArtifacts[0];
 
     // Download the latest artifact
-    const { data: artifactData } = await github.rest.actions.downloadArtifact({
+    const { data: artifactData } = await octokit.rest.actions.downloadArtifact({
       owner: github.context.repo.owner,
       repo: provisioningRepo,
       artifact_id: latestArtifact.id,
