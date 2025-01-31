@@ -95,7 +95,7 @@ jobs:
             const branch = process.env.BRANCH;
 
             for (const platform of platforms) {
-              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/lib');
+              const downloadPath = path.join(process.env.GITHUB_WORKSPACE, 'provision/libs');
               const filePath = path.join(downloadPath, `built-libraries-${platform}.zip`);
               await downloadAndExtractArtifact(github, core, `built-libraries-${platform}`, downloadPath, filePath, branch);
             }
@@ -123,7 +123,7 @@ jobs:
           commit-message: "Update provisioning libraries and headers"
           base: ${{ github.event.client_payload.branch }}
           branch: automation/update_${{ github.event.client_payload.branch }}_provisioning
-          add-paths: 'matter_support/provision'
+          add-paths: 'provision'
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           token: ${{ secrets.GITHUB_TOKEN }}
