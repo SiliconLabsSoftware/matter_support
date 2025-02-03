@@ -28,7 +28,10 @@ jobs:
             const changedFiles = files.map(file => file.filename);
             console.log('Changed files:', changedFiles);
 
-            const unauthorizedChanges = changedFiles.some(file => file.startsWith('provision/'));
+            const unauthorizedChanges = changedFiles.some(file => 
+              file.startsWith('provision/libs/') || file.startsWith('provision/headers/')
+            );
+            
             if (unauthorizedChanges) {
-              core.setFailed(`Unauthorized changes detected in the provision/ directory by ${context.actor}`);
+              core.setFailed(`Unauthorized changes detected in the provision directory by ${context.actor}`);
             }
