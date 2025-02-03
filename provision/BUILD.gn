@@ -12,8 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("../../silabs_board.gni")
+
 config("provision-config") {
   include_dirs = [ "." ]
+
+  defines = [ "CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS=1" ]
+  if (use_provision_channel) {
+    defines += [ "SL_MATTER_PROVISION_CHANNEL_ENABLED=1" ]
+  }
 }
 
 source_set("headers") {
