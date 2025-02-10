@@ -17,10 +17,8 @@ import("../../silabs_board.gni")
 config("provision-config") {
   include_dirs = [ "." ]
 
-  defines = [ "CHIP_DEVICE_CONFIG_ENABLE_EXAMPLE_CREDENTIALS=1" ]
-  if (use_provision_channel) {
-    defines += [ "SL_MATTER_PROVISION_CHANNEL_ENABLED=1" ]
-  }
+  # TODO: Link this to a gn argument to be able to disable the example credentials
+  defines = [ "SL_MATTER_ENABLE_EXAMPLE_CREDENTIALS=1" ]
 }
 
 source_set("headers") {
@@ -31,6 +29,8 @@ source_set("headers") {
     "headers/ProvisionManager.h",
     "headers/ProvisionProtocol.h",
     "headers/ProvisionStorage.h",
+    "headers/ProvisionedDataProvider.h",
   ]
+
   public_configs = [ ":provision-config" ]
 }
