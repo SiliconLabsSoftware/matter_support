@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("../../silabs_board.gni")
-if (wifi_soc) {
-  import("../../SiWx917_sdk.gni")
-} else {
-  import("../../efr32_sdk.gni")
-}
+import("//build_overrides/chip.gni")
 
 declare_args() {
-  sl_provision_root = "${matter_support_root}/provision"
+  # We can't use matter_support_root since that forces the inclusion of silabs_board.gni
+  # which has an assert that gets triggered for non-silabs specific builds.
+  sl_provision_root = "${chip_root}/third_party/silabs/matter_support/provision"
 }
