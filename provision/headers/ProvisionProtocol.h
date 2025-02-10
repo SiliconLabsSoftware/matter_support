@@ -16,8 +16,8 @@
  */
 #pragma once
 
-#include "ProvisionEncoder.h"
-#include "ProvisionStorage.h"
+#include <headers/ProvisionEncoder.h>
+#include <headers/ProvisionStorage.h>
 #include <lib/support/Span.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -37,8 +37,8 @@ public:
     /**
      * Must hold the header plus complete argument value
      */
-    virtual ~Protocol()                                                  = default;
-    virtual bool Execute(Storage *store, ByteSpan & request, MutableByteSpan & response) = 0;
+    virtual ~Protocol()                                                                   = default;
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response) = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -51,14 +51,14 @@ class Protocol1 : public Protocol
 public:
     static constexpr size_t kVersion = 1;
 
-    virtual bool Execute(Storage *store, ByteSpan & request, MutableByteSpan & response);
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response);
 
 private:
-    CHIP_ERROR Init(Storage *store, Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR GenerateCSR(Storage *store, Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Import(Storage *store, Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Setup(Storage *store, Encoding::Buffer & in, Encoding::Buffer & out);
-    CHIP_ERROR Read(Storage *store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Init(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR GenerateCSR(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Import(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Setup(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
+    CHIP_ERROR Read(Storage * store, Encoding::Buffer & in, Encoding::Buffer & out);
 };
 
 #endif // SILABS_PROVISION_PROTOCOL_V1
@@ -92,7 +92,7 @@ public:
     static constexpr size_t kResponseHeaderSize = 8;
     static_assert(kPackageSizeMax > (kResponseHeaderSize + kChecksumSize));
 
-    virtual bool Execute(Storage *store, ByteSpan & request, MutableByteSpan & response);
+    virtual bool Execute(Storage * store, ByteSpan & request, MutableByteSpan & response);
 };
 
 } // namespace Provision
