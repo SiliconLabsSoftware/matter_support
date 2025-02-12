@@ -50,3 +50,24 @@ jobs:
             if (unauthorizedChanges) {
               core.setFailed('Unauthorized changes detected in the provision directory.');
             }
+
+      # This step is necessary since the bot doesn't have the necessary permissions to trigger the CI
+      - name: Close and re-open PR to trigger the CI
+        if: ${{ github.actor == 'github-actions[bot]' }}
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          script: |
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'closed'
+            });
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'open'
+            });
