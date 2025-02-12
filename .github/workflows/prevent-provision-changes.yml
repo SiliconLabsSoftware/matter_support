@@ -25,6 +25,8 @@ jobs:
               pull_number: context.payload.pull_request.number
             });
 
+            let unauthorizedChanges = false;
+
             for (const commit of commits) {
               const { data: files } = await github.rest.repos.getCommit({
                 owner: context.repo.owner,
@@ -35,13 +37,15 @@ jobs:
               const changedFiles = files.files.map(file => file.filename);
               console.log(`Changed files in commit ${commit.sha}:`, changedFiles);
 
-              const unauthorizedChanges = files.files.some(file => 
+              if (files.files.some(file => 
                 (file.filename.startsWith('provision/libs/') || file.filename.startsWith('provision/headers/')) && 
                 file.additions > 0 && file.deletions > 0 && commit.author.login !== 'github-actions[bot]'
-              );
-
-              if (unauthorizedChanges) {
-                core.setFailed(`Unauthorized changes detected in the provision directory by ${commit.author.login} in commit ${commit.sha}`);
-                break;
+              )) {
+                unauthorizedChanges = true;
+                console.log(`Unauthorized changes detected in the provision directory by ${commit.author.login} in commit ${commit.sha}`);
               }
+            }
+
+            if (unauthorizedChanges) {
+              core.setFailed('Unauthorized changes detected in the provision directory.');
             }
