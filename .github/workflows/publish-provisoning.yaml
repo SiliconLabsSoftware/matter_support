@@ -127,3 +127,22 @@ jobs:
           author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Open and Close PR
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.WORKFLOW_TOKEN }}
+          script: |
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'closed'
+            });
+
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              state: 'open'
+            });
