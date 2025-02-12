@@ -39,7 +39,8 @@ jobs:
 
               if (files.files.some(file => 
                 (file.filename.startsWith('provision/libs/') || file.filename.startsWith('provision/headers/')) && 
-                file.additions > 0 && file.deletions > 0 && commit.author.login !== 'github-actions[bot]'
+                (file.additions > 0 || file.deletions > 0 || file.status === 'added' || file.status === 'removed') && 
+                commit.author.login !== 'github-actions[bot]'
               )) {
                 unauthorizedChanges = true;
                 console.log(`Unauthorized changes detected in the provision directory by ${commit.author.login} in commit ${commit.sha}`);
