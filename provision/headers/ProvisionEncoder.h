@@ -28,20 +28,19 @@ namespace Provision {
 namespace Encoding {
 
 /*
-    Generic buffer used to hold incoming and outgoing data.
-    The "in" pointer marks the next address to be written.
-    The "out" pointer marks the next address to be read.
-    When "out" reaches "in", all incoming data has been read.
-    "Size" is the total amount of bytes written, including the part already read.
-    "Left" is the number of bytes available for reading.
-    "Offset" is the number of bytes read.
-    "Spare" is the number of bytes available for writing.
-    "Limit" it the total number of bytes allocated (size + spare).
+Generic buffer used to hold incoming and outgoing data.
+The "in" pointer marks the next address to be written.
+The "out" pointer marks the next address to be read.
+When "out" reaches "in", all incoming data has been read.
+"Size" is the total amount of bytes written, including the part already
+read. "Left" is the number of bytes available for reading. "Offset" is the
+number of bytes read. "Spare" is the number of bytes available for writing.
+"Limit" it the total number of bytes allocated (size + spare).
 begin            out             in               end
-  |---------------v---------------v----------------|
-  |.....offset....|......left.....|.....spare......|
-  |..............size.............|
-  |......................limit.....................|
+|---------------v---------------v----------------|
+|.....offset....|......left.....|.....spare......|
+|..............size.............|
+|......................limit.....................|
 */
 
 struct Buffer
@@ -51,9 +50,9 @@ struct Buffer
     void Init(uint8_t * ptr, size_t size, bool at_end = false)
     {
         Finish();
-        if(nullptr == ptr)
+        if (nullptr == ptr)
         {
-            ptr = new uint8_t[size];
+            ptr       = new uint8_t[size];
             allocated = true;
         }
         this->begin = ptr;
@@ -63,7 +62,7 @@ struct Buffer
     }
     void Finish()
     {
-        if(this->begin && allocated)
+        if (this->begin && allocated)
         {
             delete[] this->begin;
         }
@@ -73,11 +72,11 @@ struct Buffer
     /** Reset the pointers to initial position. Zero write, zero read. */
     void Clear() { this->in = this->out = this->begin; }
     /** @return Total size allocated for the buffer. */
-    size_t Limit() { return (this->end > this->begin) ? (this->end - this->begin) : 0; }
+    size_t Limit() { return static_cast<size_t>((this->end > this->begin) ? (this->end - this->begin) : 0); }
     /** @return Number of bytes written. */
-    size_t Size() { return (this->in > this->begin) ? (this->in - this->begin) : 0; }
+    size_t Size() { return static_cast<size_t>((this->in > this->begin) ? (this->in - this->begin) : 0); }
     /** @return Number of bytes read. */
-    size_t Offset() { return (this->out > this->begin) ? (this->out - this->begin) : 0; }
+    size_t Offset() { return static_cast<size_t>((this->out > this->begin) ? (this->out - this->begin) : 0); }
     /** @return Number of bytes available for reading. */
     size_t Left() { return this->Size() - this->Offset(); }
     /** @return Number of bytes available for writing. */
@@ -99,7 +98,7 @@ struct Buffer
     uint8_t * end   = nullptr;
     uint8_t * in    = nullptr;
     uint8_t * out   = nullptr;
-    bool allocated = false;
+    bool allocated  = false;
 };
 
 //------------------------------------------------------------------------------
