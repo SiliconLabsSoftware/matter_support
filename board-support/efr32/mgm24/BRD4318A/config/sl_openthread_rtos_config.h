@@ -89,13 +89,13 @@
 // <h> App Task
 // <i> Enable default App task
 // <i> Default: On
-#define SL_OPENTHREAD_ENABLE_APP_TASK  0
+#define SL_OPENTHREAD_ENABLE_APP_TASK 0
 
 // </h>
 // <h> Serial task
 // <i> Enable Serial task
 // <i> Default: On
-#define SL_OPENTHREAD_ENABLE_SERIAL_TASK (1)
+#define SL_OPENTHREAD_ENABLE_SERIAL_TASK (0)
 
 // </h>
 // <<< end of configuration section >>>
