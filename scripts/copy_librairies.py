@@ -64,7 +64,7 @@ def main():
     parser = argparse.ArgumentParser(description='Copy files from source directories to a destination directory.')
     parser.add_argument('--sdk', metavar='si_sdk_path', required=False, default='../simplicity_sdk',
                         help='Path to Si SDK to use to take the libraries from.')
-    parser.add_argument('--sdk-support', metavar='sdk_support_path', required=False, default='./',
+    parser.add_argument('--sdk-support', metavar='sdk_support_path', required=False, default='./sdk-copies/',
                         help='Path to SDK support directory.')
     args = parser.parse_args()
 
