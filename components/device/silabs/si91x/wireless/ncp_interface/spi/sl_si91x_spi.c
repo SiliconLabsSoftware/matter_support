@@ -27,6 +27,8 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *
  ******************************************************************************/
+#include "sl_si91x_ncp_utility.h"
+
 #include "sl_si91x_status.h"
 #include "sl_si91x_types.h"
 #include "sl_si91x_constants.h"
@@ -179,22 +181,26 @@ sl_status_t sl_si91x_bus_init(void)
   // Create a timestamp to track elapsed time
   uint32_t timestamp;
 
+  sl_si91x_host_spi_cs_assert();
   timestamp = sl_si91x_host_get_timestamp();
   do {
     sl_si91x_host_spi_transfer(&temp, rx_buffer, sizeof(uint32_t));
     // Check if the response indicates success
     if (rx_buffer[3] == RSI_SPI_SUCCESS) {
+      sl_si91x_host_spi_cs_deassert();
       return SL_STATUS_OK;
     }
     // Keep looping as long as the time remaining is less than 10 milliseconds.
   } while (sl_si91x_host_elapsed_time(timestamp) < 10);
 
   // If the initialization did not succeed within the timeout, return SPI busy status
+  sl_si91x_host_spi_cs_deassert();
   return SL_STATUS_SPI_BUSY;
 }
 
 sl_status_t sl_si91x_bus_write_memory(uint32_t addr, uint16_t length, const uint8_t *buffer)
 {
+  sl_si91x_host_spi_cs_assert();
   uint32_t temp32;
   uint32_t temp16;
   sl_status_t status;
@@ -215,11 +221,13 @@ sl_status_t sl_si91x_bus_write_memory(uint32_t addr, uint16_t length, const uint
 
   // Send the data
   status = sl_si91x_host_spi_transfer(buffer, NULL, length);
+  sl_si91x_host_spi_cs_deassert();
   return status;
 }
 
 sl_status_t sli_si91x_bus_write_slave(uint32_t data_length, const uint8_t *buffer)
 {
+  sl_si91x_host_spi_cs_assert();
   uint32_t temp32;
   uint32_t temp16;
   sl_status_t status;
@@ -253,12 +261,14 @@ sl_status_t sli_si91x_bus_write_slave(uint32_t data_length, const uint8_t *buffe
     status = sl_si91x_host_spi_transfer(buffer, NULL, 1024);
     VERIFY_STATUS(status);
   }
+  sl_si91x_host_spi_cs_deassert();
 
   return status;
 }
 
 sl_status_t sl_si91x_bus_read_memory(uint32_t addr, uint16_t length, uint8_t *buffer)
 {
+  sl_si91x_host_spi_cs_assert();
   //  uint8_t rx_buffer[4];
   sl_status_t status;
   uint32_t temp32;
@@ -285,6 +295,7 @@ sl_status_t sl_si91x_bus_read_memory(uint32_t addr, uint16_t length, uint8_t *bu
   // Read in the memory data
   status = sl_si91x_host_spi_transfer(NULL, buffer, length);
   VERIFY_STATUS(status);
+  sl_si91x_host_spi_cs_deassert();
 
   return status;
 }
@@ -292,6 +303,7 @@ sl_status_t sl_si91x_bus_read_memory(uint32_t addr, uint16_t length, uint8_t *bu
 // address is 6-bits long, upper two bits must be cleared for byte mode
 sl_status_t sl_si91x_bus_write_register(uint8_t address, uint8_t register_size, uint16_t data)
 {
+  sl_si91x_host_spi_cs_assert();
   sl_status_t status;
 
   // Send C1/C2 control information with register address and write operation
@@ -300,6 +312,7 @@ sl_status_t sl_si91x_bus_write_register(uint8_t address, uint8_t register_size, 
 
   // Send the data to be written to the register
   status = sl_si91x_host_spi_transfer(&data, NULL, register_size);
+  sl_si91x_host_spi_cs_deassert();
   return status;
 }
 
@@ -307,6 +320,7 @@ sl_status_t sl_si91x_bus_write_register(uint8_t address, uint8_t register_size, 
 // register_size must be 1 or 2
 sl_status_t sl_si91x_bus_read_register(uint8_t address, uint8_t register_size, uint16_t *output)
 {
+  sl_si91x_host_spi_cs_assert();
   sl_status_t status;
   uint16_t temp16 = (register_size == 1 ? RSI_C1INTREAD1BYTES : RSI_C1INTREAD2BYTES) | (address << 8);
 
@@ -322,12 +336,14 @@ sl_status_t sl_si91x_bus_read_register(uint8_t address, uint8_t register_size, u
 
   // Start token found now read the byte/s of data
   status = sl_si91x_host_spi_transfer(NULL, output, register_size);
+  sl_si91x_host_spi_cs_deassert();
 
   return status;
 }
 
 sl_status_t sl_si91x_bus_write_frame(sl_si91x_packet_t *packet, const uint8_t *payloadparam, uint16_t size_param)
 {
+  sl_si91x_host_spi_cs_assert();
   UNUSED_PARAMETER(payloadparam); // Unused parameter(to suppress compiler warnings)
   sl_status_t status;
 
@@ -352,6 +368,7 @@ sl_status_t sl_si91x_bus_write_frame(sl_si91x_packet_t *packet, const uint8_t *p
   // If a specific chip manufacturing feature is enabled, adjust the size_param
   size_param += RSI_HOST_DESC_LENGTH;
   status = basic_data_transfer(c1c2, size_param, uFrameDscFrame, NULL);
+  sl_si91x_host_spi_cs_deassert();
   return status;
 #endif
 
@@ -367,11 +384,13 @@ sl_status_t sl_si91x_bus_write_frame(sl_si91x_packet_t *packet, const uint8_t *p
     status = basic_data_transfer(RSI_C1FRMWR16BIT4BYTE | (C2_READ_WRITE_SIZE << 8), size_param, &packet->data, NULL);
     VERIFY_STATUS(status);
   }
+  sl_si91x_host_spi_cs_deassert();
   return status;
 }
 
 sl_status_t sl_si91x_bus_read_frame(sl_wifi_buffer_t **buffer)
 {
+  sl_si91x_host_spi_cs_assert();
   sl_status_t status;
   uint16_t local_buffer[2];
   uint8_t *data;
@@ -401,16 +420,19 @@ sl_status_t sl_si91x_bus_read_frame(sl_wifi_buffer_t **buffer)
   } else {
     status = packet_read_with_dummy_data(data, local_buffer[1], local_buffer[0]);
   }
+  sl_si91x_host_spi_cs_deassert();
   return status;
 
 #else
   // Read first 4 bytes
   retval = rsi_spi_pkt_len(&local_buffer[0]);
   if (retval != 0x00) {
+    sl_si91x_host_spi_cs_deassert();
     return retval;
   }
   retval = rsi_nlink_pkt_rd(pkt_buffer, rsi_bytes2R_to_uint16(&local_buffer[0]) & 0xFFF);
   if (retval != 0x00) {
+    sl_si91x_host_spi_cs_deassert();
     return retval;
   }
 #endif
@@ -492,11 +514,12 @@ void sl_si91x_ulp_wakeup_init(void)
   txCmd[2] = ((SL_SI91X_INIT_CMD >> 16) & 0xFF);
   txCmd[3] = ((SL_SI91X_INIT_CMD >> 24) & 0xFF);
 
+  sl_si91x_host_spi_cs_assert();
   while (1) {
     // Transfer the initialization command to the SI91x module and check the response
     sl_si91x_host_spi_transfer(txCmd, rxbuff, 2);
     if (rxbuff[1] == RSI_SPI_FAIL) {
-      return; // Initialization failed
+      break; // Initialization failed
     } else if (rxbuff[1] == 0x00) {
       // If the response indicates success, transfer the remaining part of the command
       sl_si91x_host_spi_transfer(&txCmd[2], rxbuff, 2);
@@ -505,4 +528,5 @@ void sl_si91x_ulp_wakeup_init(void)
       }
     }
   }
+  sl_si91x_host_spi_cs_deassert();
 }
