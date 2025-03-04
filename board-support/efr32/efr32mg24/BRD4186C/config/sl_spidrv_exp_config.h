@@ -51,7 +51,11 @@
 // <o SL_SPIDRV_EXP_CS_CONTROL> SPI master chip select (CS) control scheme.
 // <spidrvCsControlAuto=> CS controlled by the SPI driver
 // <spidrvCsControlApplication=> CS controlled by the application
+#ifdef SL_WIFI
+#define SL_SPIDRV_EXP_CS_CONTROL        spidrvCsControlApplication
+#else
 #define SL_SPIDRV_EXP_CS_CONTROL        spidrvCsControlAuto
+#endif // SL_WIFI
 
 // <o SL_SPIDRV_EXP_SLAVE_START_MODE> SPI slave transfer start scheme
 // <spidrvSlaveStartImmediate=> Transfer starts immediately
