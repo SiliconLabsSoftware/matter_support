@@ -15,12 +15,14 @@
  *
  ******************************************************************************/
 
+#include <platform/silabs/wifi/SiWx/ncp/sl_board_configuration.h>
 #include <platform/silabs/wifi/ncp/spi_multiplex.h>
 #include <platform/silabs/wifi/SiWx/ncp/sl_si91x_ncp_utility.h>
 
 #include "sl_wifi_constants.h"
 #include "sl_si91x_host_interface.h"
-#include "sl_board_configuration.h"
+// TODO: use instead of platform/silabs/wifi/SiWx/ncp/sl_board_configuration.h
+// #include "sl_board_configuration.h"
 #include "sl_status.h"
 #include "em_usart.h"
 #include "em_cmu.h"
@@ -38,15 +40,12 @@
 #include "spidrv.h"
 #include "sl_spidrv_instances.h"
 #include "sl_spidrv_exp_config.h"
-#include "si91x_ncp_spi_config.h"
+// TODO: use instead of platform/silabs/wifi/SiWx/ncp/sl_board_configuration.h
+// #include "si91x_ncp_spi_config.h"
 
 #if defined(SL_CATLOG_POWER_MANAGER_PRESENT)
 #include "sl_power_manager.h"
 #endif // SL_CATLOG_POWER_MANAGER_PRESENT
-
-#ifdef SL_BOARD_NAME
-#include "sl_board_control.h"
-#endif // SL_BOARD_NAME
 
 // use SPI handle for EXP header (configured in project settings)
 extern SPIDRV_Handle_t sl_spidrv_exp_handle;
@@ -85,40 +84,35 @@ static void efx32_spi_init(void)
   SPIDRV_SetBitrate(SPI_HANDLE, USART_INITSYNC_BAUDRATE);
 
   // Configure SPI bus pins
-  GPIO_PinModeSet(SL_SPIDRV_EXP_RX_PORT, SL_SPIDRV_EXP_RX_PIN, gpioModeInput, 0);
-  GPIO_PinModeSet(SL_SPIDRV_EXP_TX_PORT, SL_SPIDRV_EXP_TX_PIN, gpioModePushPull, 0);
-  GPIO_PinModeSet(SL_SPIDRV_EXP_CLK_PORT, SL_SPIDRV_EXP_CLK_PIN, gpioModePushPullAlternate, 0);
-  GPIO_PinModeSet(SL_SPIDRV_EXP_CS_PORT, SL_SPIDRV_EXP_CS_PIN, gpioModePushPull, 1);
+  GPIO_PinModeSet(SPI_MISO_PIN.port, SPI_MISO_PIN.pin, gpioModeInput, 0);
+  GPIO_PinModeSet(SPI_MOSI_PIN.port, SPI_MOSI_PIN.pin, gpioModePushPull, 0);
+  GPIO_PinModeSet(SPI_CLOCK_PIN.port, SPI_CLOCK_PIN.pin, gpioModePushPullAlternate, 0);
+  GPIO_PinModeSet(SPI_CS_PIN.port, SPI_CS_PIN.pin, gpioModePushPull, 1);
 
   // configure packet pending interrupt priority
-  NVIC_SetPriority(NCP_RX_IRQ, PACKET_PENDING_INT_PRI);
-  GPIOINT_CallbackRegister(SI91X_NCP_INTERRUPT_PIN, gpio_interrupt);
-  GPIO_PinModeSet(SI91X_NCP_INTERRUPT_PORT, SI91X_NCP_INTERRUPT_PIN, gpioModeInputPullFilter, 0);
+  NVIC_SetPriority(GPIO_ODD_IRQn, PACKET_PENDING_INT_PRI);
+  GPIOINT_CallbackRegister(INTERRUPT_PIN.pin, gpio_interrupt);
+  GPIO_PinModeSet(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, gpioModeInputPullFilter, 0);
 
-  // Check if the boot option is set to LOAD_DEFAULT_NWP_FW_ACTIVE_LOW
-  if (init_config.boot_option == LOAD_DEFAULT_NWP_FW_ACTIVE_LOW)
-    // Configure the GPIO external interrupt for active low configuration
-    GPIO_ExtIntConfig(SI91X_NCP_INTERRUPT_PORT, SI91X_NCP_INTERRUPT_PIN, SI91X_NCP_INTERRUPT_PIN, false, true, true);
-  else
-    // Configure the GPIO external interrupt for active high configuration
-    GPIO_ExtIntConfig(SI91X_NCP_INTERRUPT_PORT, SI91X_NCP_INTERRUPT_PIN, SI91X_NCP_INTERRUPT_PIN, true, false, true);
+  // Configure the GPIO external interrupt for active high configuration
+  GPIO_ExtIntConfig(INTERRUPT_PIN.port, INTERRUPT_PIN.pin, INTERRUPT_PIN.pin, true, false, true);
 
   return;
 }
 
 void sl_si91x_host_set_sleep_indicator(void)
 {
-  GPIO_PinOutSet(SI91X_NCP_SLEEP_CONFIRM_PORT, SI91X_NCP_SLEEP_CONFIRM_PIN);
+  GPIO_PinOutSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
 }
 
 void sl_si91x_host_clear_sleep_indicator(void)
 {
-  GPIO_PinOutClear(SI91X_NCP_SLEEP_CONFIRM_PORT, SI91X_NCP_SLEEP_CONFIRM_PIN);
+  GPIO_PinOutClear(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin);
 }
 
 uint32_t sl_si91x_host_get_wake_indicator(void)
 {
-  return GPIO_PinInGet(SI91X_NCP_WAKE_INDICATOR_PORT, SI91X_NCP_WAKE_INDICATOR_PIN);
+  return GPIO_PinInGet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin);
 }
 
 sl_status_t sl_si91x_host_init(const sl_si91x_host_init_configuration *config)
@@ -144,11 +138,11 @@ sl_status_t sl_si91x_host_init(const sl_si91x_host_init_configuration *config)
   efx32_spi_init();
 
   // Start reset line low
-  GPIO_PinModeSet(SI91X_NCP_RESET_PORT, SI91X_NCP_RESET_PIN, gpioModeWiredAnd, 0);
+  GPIO_PinModeSet(RESET_PIN.port, RESET_PIN.pin, gpioModeWiredAnd, 0);
 
   // Configure interrupt, sleep and wake confirmation pins
-  GPIO_PinModeSet(SI91X_NCP_SLEEP_CONFIRM_PORT, SI91X_NCP_SLEEP_CONFIRM_PIN, gpioModeWiredOrPullDown, 1);
-  GPIO_PinModeSet(SI91X_NCP_WAKE_INDICATOR_PORT, SI91X_NCP_WAKE_INDICATOR_PIN, gpioModeWiredOrPullDown, 0);
+  GPIO_PinModeSet(SLEEP_CONFIRM_PIN.port, SLEEP_CONFIRM_PIN.pin, gpioModeWiredOrPullDown, 1);
+  GPIO_PinModeSet(WAKE_INDICATOR_PIN.port, WAKE_INDICATOR_PIN.pin, gpioModeWiredOrPullDown, 0);
 
   return SL_STATUS_OK;
 }
@@ -243,23 +237,23 @@ sl_status_t sl_si91x_host_spi_transfer(const void *tx_buffer, void *rx_buffer, u
 
 void sl_si91x_host_hold_in_reset(void)
 {
-  GPIO_PinOutClear(SI91X_NCP_RESET_PORT, SI91X_NCP_RESET_PIN);
+  GPIO_PinOutClear(RESET_PIN.port, RESET_PIN.pin);
 }
 
 void sl_si91x_host_release_from_reset(void)
 {
-  GPIO_PinOutSet(SI91X_NCP_RESET_PORT, SI91X_NCP_RESET_PIN);
+  GPIO_PinOutSet(RESET_PIN.port, RESET_PIN.pin);
 }
 
 void sl_si91x_host_enable_bus_interrupt(void)
 {
-  NVIC_ClearPendingIRQ(NCP_RX_IRQ);
-  NVIC_EnableIRQ(NCP_RX_IRQ);
+  NVIC_ClearPendingIRQ(GPIO_ODD_IRQn);
+  NVIC_EnableIRQ(GPIO_ODD_IRQn);
 }
 
 void sl_si91x_host_disable_bus_interrupt(void)
 {
-  NVIC_DisableIRQ(NCP_RX_IRQ);
+  NVIC_DisableIRQ(GPIO_ODD_IRQn);
 }
 
 bool sl_si91x_host_is_in_irq_context(void)
