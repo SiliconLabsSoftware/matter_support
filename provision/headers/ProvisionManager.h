@@ -46,6 +46,7 @@ private:
 #endif
     Protocol2 mProtocol2;
     bool mProvisionRequested = true;
+    bool mResetPending = false;
 };
 
 } // namespace Provision
