@@ -101,6 +101,8 @@ enum ID : uint16_t
     kPKCS12              = 0x0199,
     kCommonName          = 0x01a1,
     kOtaTlvEncryptionKey = 0x01a2,
+    // Testing
+    kTestKey             = 0x01b1,
 };
 
 } // namespace Parameters
@@ -244,6 +246,10 @@ public:
     CHIP_ERROR GetSetupPayload(chip::MutableCharSpan & value);
     CHIP_ERROR SetProvisionRequest(bool value);
     CHIP_ERROR GetProvisionRequest(bool & value);
+#ifdef SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
+    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
+    CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan);
+#endif // SL_MATTER_TEST_EVENT_TRIGGER_ENABLED
     void SetBufferSize(size_t size) { mBufferSize = size > 0 ? size : kArgumentSizeMax; }
     size_t GetBufferSize() { return mBufferSize; }
 
