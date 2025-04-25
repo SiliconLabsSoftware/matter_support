@@ -116,7 +116,7 @@ def _parse_args():
                         default="../../../examples/platform/silabs/matter-platform.slcp", help="Path to project slcp to use to generate slc files.")
     parser.add_argument("--board", metavar="board", required=False, default="all",
                         help="Board for which to generaten autogen and configuration files.")
-    parser.add_argument("--output", metavar="output_path", required=False, default="matter/efr32",
+    parser.add_argument("--output", metavar="output_path", required=False, default="board-support/efr32",
                         help="Directory where the board genenration will be created. Fomart: ./family/board/output")
     parser.add_argument("--delete-files", metavar="delete-files", required=False, type=_convertStrToBool, default=True,
                         help="Option to delete files step for each generation.")
