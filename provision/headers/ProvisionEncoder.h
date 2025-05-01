@@ -28,19 +28,19 @@ namespace Provision {
 namespace Encoding {
 
 /*
-Generic buffer used to hold incoming and outgoing data.
-The "in" pointer marks the next address to be written.
-The "out" pointer marks the next address to be read.
-When "out" reaches "in", all incoming data has been read.
-"Size" is the total amount of bytes written, including the part already
+    Generic buffer used to hold incoming and outgoing data.
+    The "in" pointer marks the next address to be written.
+    The "out" pointer marks the next address to be read.
+    When "out" reaches "in", all incoming data has been read.
+    "Size" is the total amount of bytes written, including the part already
 read. "Left" is the number of bytes available for reading. "Offset" is the
 number of bytes read. "Spare" is the number of bytes available for writing.
-"Limit" it the total number of bytes allocated (size + spare).
+    "Limit" it the total number of bytes allocated (size + spare).
 begin            out             in               end
-|---------------v---------------v----------------|
-|.....offset....|......left.....|.....spare......|
-|..............size.............|
-|......................limit.....................|
+  |---------------v---------------v----------------|
+  |.....offset....|......left.....|.....spare......|
+  |..............size.............|
+  |......................limit.....................|
 */
 
 struct Buffer
@@ -72,11 +72,11 @@ struct Buffer
     /** Reset the pointers to initial position. Zero write, zero read. */
     void Clear() { this->in = this->out = this->begin; }
     /** @return Total size allocated for the buffer. */
-    size_t Limit() { return static_cast<size_t>((this->end > this->begin) ? (this->end - this->begin) : 0); }
+    size_t Limit() { return (this->end > this->begin) ? (this->end - this->begin) : 0; }
     /** @return Number of bytes written. */
-    size_t Size() { return static_cast<size_t>((this->in > this->begin) ? (this->in - this->begin) : 0); }
+    size_t Size() { return (this->in > this->begin) ? (this->in - this->begin) : 0; }
     /** @return Number of bytes read. */
-    size_t Offset() { return static_cast<size_t>((this->out > this->begin) ? (this->out - this->begin) : 0); }
+    size_t Offset() { return (this->out > this->begin) ? (this->out - this->begin) : 0; }
     /** @return Number of bytes available for reading. */
     size_t Left() { return this->Size() - this->Offset(); }
     /** @return Number of bytes available for writing. */
