@@ -16,9 +16,9 @@
  */
 #pragma once
 
-#include <headers/ProvisionChannel.h>
-#include <headers/ProvisionProtocol.h>
-#include <headers/ProvisionStorage.h>
+#include "ProvisionChannel.h"
+#include "ProvisionProtocol.h"
+#include "ProvisionStorage.h"
 #include <lib/core/CHIPError.h>
 
 namespace chip {
@@ -46,6 +46,7 @@ private:
 #endif
     Protocol2 mProtocol2;
     bool mProvisionRequested = true;
+    bool mResetPending       = false;
 };
 
 } // namespace Provision
