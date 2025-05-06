@@ -39,7 +39,7 @@ public:
      *
      * @param[out] keySpan output buffer. Must be at least large enough for 16 bytes (key length)
      *
-     * @return CHIP_ERROR CHIP_NO_ERROR, if guetting the test event trigger succeed
+     * @return CHIP_ERROR CHIP_NO_ERROR, if getting the test event trigger succeeds
      *                    CHIP_ERROR_BUFFER_TOO_SMALL, if the provided keySpan is too small,
      *                    CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND, if the enableKey wasn't found when trying to read it
      *                    CHIP_ERROR_INTERNAL, if there is a processing error when processing the enableKey

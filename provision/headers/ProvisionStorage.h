@@ -16,8 +16,9 @@
  */
 #pragma once
 
-#include "ProvisionStorageGeneric.h"
 #include <credentials/DeviceAttestationCredsProvider.h>
+#include <headers/ProvisionStorageGeneric.h>
+#include <headers/ProvisionedDataProvider.h>
 #include <platform/CommissionableDataProvider.h>
 #include <platform/DeviceInstanceInfoProvider.h>
 
@@ -132,7 +133,8 @@ constexpr size_t kPaddingFieldLengthInBits              = 4;
 struct Storage : public GenericStorage,
                  public chip::DeviceLayer::DeviceInstanceInfoProvider,
                  public chip::DeviceLayer::CommissionableDataProvider,
-                 public chip::Credentials::DeviceAttestationCredentialsProvider
+                 public chip::Credentials::DeviceAttestationCredentialsProvider,
+                 public ProvisionedDataProvider
 {
     static constexpr size_t kArgumentSizeMax             = 512;
     static constexpr size_t kVersionLengthMax            = 16;
@@ -188,44 +190,51 @@ public:
     // DeviceInstanceInfoProvider
     //
 
-    CHIP_ERROR GetSerialNumber(char * value, size_t max);
-    CHIP_ERROR GetVendorId(uint16_t & value);
-    CHIP_ERROR GetVendorName(char * value, size_t max);
-    CHIP_ERROR GetProductId(uint16_t & productId);
-    CHIP_ERROR GetProductName(char * value, size_t max);
-    CHIP_ERROR GetProductLabel(char * value, size_t max);
-    CHIP_ERROR GetProductURL(char * value, size_t max);
-    CHIP_ERROR GetPartNumber(char * value, size_t max);
-    CHIP_ERROR GetHardwareVersion(uint16_t & value);
-    CHIP_ERROR GetHardwareVersionString(char * value, size_t max);
-    CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day);
-    CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value);
+    CHIP_ERROR GetSerialNumber(char * value, size_t max) override;
+    CHIP_ERROR GetVendorId(uint16_t & value) override;
+    CHIP_ERROR GetVendorName(char * value, size_t max) override;
+    CHIP_ERROR GetProductId(uint16_t & productId) override;
+    CHIP_ERROR GetProductName(char * value, size_t max) override;
+    CHIP_ERROR GetProductLabel(char * value, size_t max) override;
+    CHIP_ERROR GetProductURL(char * value, size_t max) override;
+    CHIP_ERROR GetPartNumber(char * value, size_t max) override;
+    CHIP_ERROR GetHardwareVersion(uint16_t & value) override;
+    CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
+    CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
+    CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
 
     //
     // CommissionableDataProvider
     //
 
-    CHIP_ERROR GetSetupDiscriminator(uint16_t & value);
-    CHIP_ERROR GetSpake2pIterationCount(uint32_t & value);
-    CHIP_ERROR GetSetupPasscode(uint32_t & value);
-    CHIP_ERROR GetSpake2pSalt(MutableByteSpan & value);
-    CHIP_ERROR GetSpake2pVerifier(MutableByteSpan & value, size_t & size);
+    CHIP_ERROR GetSetupDiscriminator(uint16_t & value) override;
+    CHIP_ERROR GetSpake2pIterationCount(uint32_t & value) override;
+    CHIP_ERROR GetSetupPasscode(uint32_t & value) override;
+    CHIP_ERROR GetSpake2pSalt(MutableByteSpan & value) override;
+    CHIP_ERROR GetSpake2pVerifier(MutableByteSpan & value, size_t & size) override;
 
     //
     // DeviceAttestationCredentialsProvider
     //
 
-    CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value);
-    CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value);
-    CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value);
-    CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value);
+    CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value) override;
+    CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value) override;
+    CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value) override;
+    CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value) override;
+    CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature) override;
     CHIP_ERROR GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr);
-    CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature);
 
     CHIP_ERROR SetCertificationDeclaration(const ByteSpan & value);
     CHIP_ERROR SetProductAttestationIntermediateCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationKey(const ByteSpan & value);
+
+    //
+    // ProvisionedDataProvider
+    //
+
+    CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
+
     //
     // Other
     //
@@ -235,7 +244,6 @@ public:
     CHIP_ERROR GetSetupPayload(chip::MutableCharSpan & value);
     CHIP_ERROR SetProvisionRequest(bool value);
     CHIP_ERROR GetProvisionRequest(bool & value);
-    CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan);
     void SetBufferSize(size_t size) { mBufferSize = size > 0 ? size : kArgumentSizeMax; }
     size_t GetBufferSize() { return mBufferSize; }
 
@@ -265,9 +273,9 @@ private:
     CHIP_ERROR SetPersistentUniqueId(const uint8_t * value, size_t size);
     CHIP_ERROR GetPersistentUniqueId(uint8_t * value, size_t max, size_t & size);
     // CommissionableDataProvider
-    CHIP_ERROR SetSetupDiscriminator(uint16_t value);
+    CHIP_ERROR SetSetupDiscriminator(uint16_t value) override;
     CHIP_ERROR SetSpake2pIterationCount(uint32_t value);
-    CHIP_ERROR SetSetupPasscode(uint32_t value);
+    CHIP_ERROR SetSetupPasscode(uint32_t value) override;
     CHIP_ERROR SetSpake2pSalt(const char * value, size_t size);
     CHIP_ERROR GetSpake2pSalt(char * value, size_t max, size_t & size);
     CHIP_ERROR SetSpake2pVerifier(const char * value, size_t size);
@@ -280,7 +288,7 @@ private:
     CHIP_ERROR GetProvisionVersion(char * value, size_t max, size_t & size);
     CHIP_ERROR SetSetupPayload(const uint8_t * value, size_t size);
     CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size);
-#if OTA_ENCRYPTION_ENABLE
+#if SL_MATTER_ENABLE_OTA_ENCRYPTION
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
 #endif
 
