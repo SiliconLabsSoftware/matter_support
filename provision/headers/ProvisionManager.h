@@ -16,9 +16,9 @@
  */
 #pragma once
 
-#include "ProvisionChannel.h"
-#include "ProvisionProtocol.h"
-#include "ProvisionStorage.h"
+#include <headers/ProvisionChannel.h>
+#include <headers/ProvisionProtocol.h>
+#include <headers/ProvisionStorage.h>
 #include <lib/core/CHIPError.h>
 
 namespace chip {
