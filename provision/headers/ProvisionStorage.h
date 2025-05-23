@@ -101,6 +101,8 @@ enum ID : uint16_t
     kPKCS12              = 0x0199,
     kCommonName          = 0x01a1,
     kOtaTlvEncryptionKey = 0x01a2,
+    // Testing
+    kTestEventTriggerKey = 0x01b1,
 };
 
 } // namespace Parameters
@@ -233,6 +235,7 @@ public:
     // ProvisionedDataProvider
     //
 
+    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
     CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
 
     //
