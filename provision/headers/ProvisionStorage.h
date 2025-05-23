@@ -282,7 +282,9 @@ private:
     CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size);
 #if OTA_ENCRYPTION_ENABLE
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
-#endif
+    CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value);
+    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
+#endif // OTA_ENCRYPTION_ENABLE
 
     uint16_t mVendorId               = 0;
     uint16_t mProductId              = 0;
