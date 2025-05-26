@@ -238,6 +238,10 @@ public:
     CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan);
     void SetBufferSize(size_t size) { mBufferSize = size > 0 ? size : kArgumentSizeMax; }
     size_t GetBufferSize() { return mBufferSize; }
+#if OTA_ENCRYPTION_ENABLE
+    CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value);
+    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
+#endif // OTA_ENCRYPTION_ENABLE
 
 private:
     // Generic Interface
@@ -282,8 +286,6 @@ private:
     CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size);
 #if OTA_ENCRYPTION_ENABLE
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
-    CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value);
-    CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
 #endif // OTA_ENCRYPTION_ENABLE
 
     uint16_t mVendorId               = 0;
