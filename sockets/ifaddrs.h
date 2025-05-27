@@ -17,8 +17,6 @@ struct ifaddrs
 // Hardcoded function to return a single interface
 static inline int getifaddrs(struct ifaddrs ** ifap)
 {
-    static struct sockaddr_in addr;
-    static struct sockaddr_in netmask;
     static struct ifaddrs ifa;
 
     ifa.ifa_next  = NULL;
