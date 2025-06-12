@@ -55,7 +55,7 @@ void sl_service_init(void)
 #endif // SL_ICD_ENABLED
 #if defined(DISPLAY_ENABLED) || defined(SL_ICD_ENABLED)
   sl_sleeptimer_init();
-  #endif // DISPLAY_ENABLED || SL_ICD_ENABLED
+#endif // DISPLAY_ENABLED || SL_ICD_ENABLED
   sl_mbedtls_init();
   sl_iostream_init_instances();
 }

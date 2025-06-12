@@ -13,10 +13,10 @@
 // <gpio> SL_SI91X_LED_0
 // $[GPIO_SL_SI91X_LED_0]
 #ifndef SL_SI91X_LED_0_PORT
-#define SL_SI91X_LED_0_PORT ULP
+#define SL_SI91X_LED_0_PORT HP
 #endif
 #ifndef SL_SI91X_LED_0_PIN
-#define SL_SI91X_LED_0_PIN 2
+#define SL_SI91X_LED_0_PIN 10
 #endif
 // [GPIO_SL_SI91X_LED_0]$
 // <<< sl:end pin_tool >>>
