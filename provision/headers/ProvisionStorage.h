@@ -297,7 +297,6 @@ private:
 #if SL_MATTER_ENABLE_OTA_ENCRYPTION
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
 #endif
-    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
 
     uint16_t mVendorId               = 0;
     uint16_t mProductId              = 0;
