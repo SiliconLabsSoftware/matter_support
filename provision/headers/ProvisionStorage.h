@@ -76,6 +76,7 @@ enum ID : uint16_t
     kHwVersionStr       = 0x0152,
     kManufacturingDate  = 0x0153,
     kPersistentUniqueId = 0x0154,
+    kSwVersionStr       = 0x0155,
     // Commissionable Data,
     kDiscriminator     = 0x0161,
     kSpake2pPasscode   = 0x0162,
@@ -204,6 +205,7 @@ public:
     CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
     CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
+    CHIP_ERROR GetSoftwareVersionString(char * value, size_t max) override;
 
     //
     // CommissionableDataProvider
@@ -270,6 +272,7 @@ private:
     CHIP_ERROR SetHardwareVersionString(const char * value, size_t len);
     CHIP_ERROR SetManufacturingDate(const char * value, size_t len);
     CHIP_ERROR GetManufacturingDate(uint8_t * value, size_t max, size_t & size);
+    CHIP_ERROR SetSoftwareVersionString(const char * value, size_t len);
     // PersistentUniqueId is used to generate the RotatingUniqueId
     // This PersistentUniqueId SHALL NOT be the same as the UniqueID attribute
     // exposed in the Basic Information cluster.
@@ -294,6 +297,7 @@ private:
 #if SL_MATTER_ENABLE_OTA_ENCRYPTION
     CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value);
 #endif
+    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
 
     uint16_t mVendorId               = 0;
     uint16_t mProductId              = 0;
