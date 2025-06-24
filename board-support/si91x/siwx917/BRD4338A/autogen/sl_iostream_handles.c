@@ -17,7 +17,7 @@ sl_iostream_t *sl_iostream_recommended_console_stream = NULL;
  *
  * @return  Instance handle if it exist, NULL otherwise.
  ******************************************************************************/
-sl_iostream_t *sl_iostream_get_handle(char *name)
+sl_iostream_t *sl_iostream_get_handle(const char *name)
 {
   for (uint32_t i = 0; i < sl_iostream_instances_count; i++) {
     if (strcmp(sl_iostream_instances_info[i]->name, name) == 0) {

@@ -1,9 +1,9 @@
-/***************************************************************************//**
+/***************************************************************************/ /**
  * @file
- * @brief Memory Heap Allocator configuration file.
+ * @brief Wrap key buffer configuration file
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,27 +28,29 @@
  *
  ******************************************************************************/
 
+#ifndef __SL_SI91X_WRAP_CONFIG_H_
+#define __SL_SI91X_WRAP_CONFIG_H_
+
+/**
+ * @addtogroup CRYPTO_CONSTANTS
+ * @{ 
+ */
+
+/**
+ * @brief Wrap key buffer size in bytes.
+ * @note 
+ *   - By default @ref SL_SI91X_WRAP_KEY_BUFFER_SIZE is set to 1400 bytes.  
+ *   - To configure @ref SL_SI91X_WRAP_KEY_BUFFER_SIZE, use the configuration wizard in Simplicity Studio for the Wrap component.
+ */
+
 // <<< Use Configuration Wizard in Context Menu >>>
-
-#ifndef SL_MEMORY_MANAGER_CONFIG_H
-#define SL_MEMORY_MANAGER_CONFIG_H
-
-// <h> Memory Manager Configuration
-
-// <o SL_MEMORY_MANAGER_BLOCK_ALLOCATION_MIN_SIZE> Minimum block allocation size
-// <32-128:8>
-// <i> Minimum block allocation size to avoid creating a block too small while splitting up an allocated block.
-// <i> Size expressed in bytes and can only be a multiple of 8 bytes for the proper data alignment management done by the dynamic allocator malloc() function.
-// <i> Default: 32
-#define SL_MEMORY_MANAGER_BLOCK_ALLOCATION_MIN_SIZE   (32)
-
-// <q SL_MEMORY_MANAGER_STATISTICS_API_ENABLE> Enables the statistics API.
-// <i> Setting this configuration to 0 will make all the statistics API return 0.
-// <i> Default: 1
-#define SL_MEMORY_MANAGER_STATISTICS_API_ENABLE  1
-
+// <h>WRAP Key Buffer Size Configuration (in bytes)
+// <o SL_SI91X_WRAP_KEY_BUFFER_SIZE> Option
+// <d> 1400
+#define SL_SI91X_WRAP_KEY_BUFFER_SIZE 1400
 // </h>
-
 // <<< end of configuration section >>>
 
-#endif /* SL_MEMORY_MANAGER_CONFIG_H */
+/** @} */
+
+#endif
