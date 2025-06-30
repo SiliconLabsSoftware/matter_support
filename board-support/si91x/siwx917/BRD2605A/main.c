@@ -1,9 +1,9 @@
 /***************************************************************************//**
- * @file
- * @brief Memory Heap Allocator configuration file.
+ * @file main.c
+ * @brief main() function.
  *******************************************************************************
  * # License
- * <b>Copyright 2024 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -27,28 +27,17 @@
  * 3. This notice may not be removed or altered from any source distribution.
  *
  ******************************************************************************/
+#include "sl_main_init.h"
+#include "sl_main_kernel.h"
 
-// <<< Use Configuration Wizard in Context Menu >>>
+int main(void)
+{
+  // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
+  sl_main_second_stage_init();
 
-#ifndef SL_MEMORY_MANAGER_CONFIG_H
-#define SL_MEMORY_MANAGER_CONFIG_H
+  app_init();
 
-// <h> Memory Manager Configuration
-
-// <o SL_MEMORY_MANAGER_BLOCK_ALLOCATION_MIN_SIZE> Minimum block allocation size
-// <32-128:8>
-// <i> Minimum block allocation size to avoid creating a block too small while splitting up an allocated block.
-// <i> Size expressed in bytes and can only be a multiple of 8 bytes for the proper data alignment management done by the dynamic allocator malloc() function.
-// <i> Default: 32
-#define SL_MEMORY_MANAGER_BLOCK_ALLOCATION_MIN_SIZE   (32)
-
-// <q SL_MEMORY_MANAGER_STATISTICS_API_ENABLE> Enables the statistics API.
-// <i> Setting this configuration to 0 will make all the statistics API return 0.
-// <i> Default: 1
-#define SL_MEMORY_MANAGER_STATISTICS_API_ENABLE  1
-
-// </h>
-
-// <<< end of configuration section >>>
-
-#endif /* SL_MEMORY_MANAGER_CONFIG_H */
+  while (sl_main_start_task_should_continue()) {
+    app_process_action();
+  }
+}

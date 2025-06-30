@@ -1,5 +1,5 @@
 /*******************************************************************************
- * @file  sl_si91x_psram_config.h
+ * @file  sl_si91x_psram_aps6404l_sqh_config.h
  * @brief
  *******************************************************************************
  * # License
@@ -14,8 +14,8 @@
  * sections of the MSLA applicable to Source Code.
  *
  ******************************************************************************/
-#ifndef __SL_SI91X_PSRAM_CONFIG_H_
-#define __SL_SI91X_PSRAM_CONFIG_H_
+#ifndef __SL_SI91X_PSRAM_APS6404L_SQH_CONFIG_H_
+#define __SL_SI91X_PSRAM_APS6404L_SQH_CONFIG_H_
 
 #include "rsi_qspi_proto.h"
 #include "sl_si91x_psram.h"
@@ -168,4 +168,4 @@
 #define PSRAM_AES_KEY_SIZE   128
 #define PSRAM_AES_USE_KEY_KH 1
 
-#endif //__SL_SI91X_PSRAM_CONFIG_H_
+#endif //__SL_SI91X_PSRAM_APS6404L_SQH_CONFIG_H_
