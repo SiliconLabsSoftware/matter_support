@@ -27,37 +27,3 @@ sl_iostream_t *sl_iostream_get_handle(const char *name)
 
   return NULL;
 }
-
-/***************************************************************************//**
- * Set iostream recommended instance for a console
- ******************************************************************************/
-void sl_iostream_set_console_instance(void)
-{
-  sl_iostream_type_t console = SL_IOSTREAM_TYPE_UNDEFINED;
-
-  for (uint32_t i = 0; i < sl_iostream_instances_count; i++) {
-    switch (sl_iostream_instances_info[i]->type) {
-      case SL_IOSTREAM_TYPE_UART:
-      case SL_IOSTREAM_TYPE_RTT:
-        if (console != SL_IOSTREAM_TYPE_UART) {
-          console = sl_iostream_instances_info[i]->type;
-          sl_iostream_recommended_console_stream = sl_iostream_instances_info[i]->handle;
-        }
-        break;
-
-      case SL_IOSTREAM_TYPE_VUART:
-        if (console != SL_IOSTREAM_TYPE_UART && console != SL_IOSTREAM_TYPE_RTT) {
-          console = sl_iostream_instances_info[i]->type;
-          sl_iostream_recommended_console_stream = sl_iostream_instances_info[i]->handle;
-        }
-        break;
-
-      case SL_IOSTREAM_TYPE_LOOPBACK:
-        // Ignore loopback interface
-        break;
-
-      default:
-        break;
-    }
-  }
-}

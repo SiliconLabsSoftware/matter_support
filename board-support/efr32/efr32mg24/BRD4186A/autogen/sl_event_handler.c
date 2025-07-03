@@ -46,8 +46,13 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
+  #if !RSI_BLE_ENABLE
   sli_bt_stack_permanent_allocation();
+#endif
+
+#ifdef SL_OT_ENABLE
   sl_ot_rtos_perm_allocation();
+#endif
 }
 
 void sli_internal_permanent_allocation(void)
