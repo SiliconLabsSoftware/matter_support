@@ -104,7 +104,7 @@ struct Buffer
 //------------------------------------------------------------------------------
 // Version 1
 //------------------------------------------------------------------------------
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
 
 namespace Version1 {
 
