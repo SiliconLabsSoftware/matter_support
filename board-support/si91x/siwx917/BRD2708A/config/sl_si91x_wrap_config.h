@@ -1,9 +1,9 @@
-/***************************************************************************//**
+/***************************************************************************/ /**
  * @file
- * @brief emlib_core Configuration
+ * @brief Wrap key buffer configuration file
  *******************************************************************************
  * # License
- * <b>Copyright 2019 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,18 +28,29 @@
  *
  ******************************************************************************/
 
-#ifndef EM_CORE_DEBUG_CONFIG_H
-#define EM_CORE_DEBUG_CONFIG_H
+#ifndef __SL_SI91X_WRAP_CONFIG_H_
+#define __SL_SI91X_WRAP_CONFIG_H_
+
+/**
+ * @addtogroup CRYPTO_CONSTANTS
+ * @{ 
+ */
+
+/**
+ * @brief Wrap key buffer size in bytes.
+ * @note 
+ *   - By default @ref SL_SI91X_WRAP_KEY_BUFFER_SIZE is set to 1400 bytes.  
+ *   - To configure @ref SL_SI91X_WRAP_KEY_BUFFER_SIZE, use the configuration wizard in Simplicity Studio for the Wrap component.
+ */
 
 // <<< Use Configuration Wizard in Context Menu >>>
-
-// <h> Core Configuration
-
-// <q SL_EMLIB_CORE_ENABLE_INTERRUPT_DISABLED_TIMING> Enables measuring of interrupt disable time for debugging purposes.
-// <i> Default: 0
-#define SL_EMLIB_CORE_ENABLE_INTERRUPT_DISABLED_TIMING    0
-
+// <h>WRAP Key Buffer Size Configuration (in bytes)
+// <o SL_SI91X_WRAP_KEY_BUFFER_SIZE> Option
+// <d> 1400
+#define SL_SI91X_WRAP_KEY_BUFFER_SIZE 1400
 // </h>
-
 // <<< end of configuration section >>>
-#endif // EM_CORE_CONFIG_H
+
+/** @} */
+
+#endif
