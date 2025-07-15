@@ -76,6 +76,7 @@ enum ID : uint16_t
     kHwVersionStr       = 0x0152,
     kManufacturingDate  = 0x0153,
     kPersistentUniqueId = 0x0154,
+    kSwVersionStr       = 0x0155,
     // Commissionable Data,
     kDiscriminator     = 0x0161,
     kSpake2pPasscode   = 0x0162,
@@ -101,6 +102,8 @@ enum ID : uint16_t
     kPKCS12              = 0x0199,
     kCommonName          = 0x01a1,
     kOtaTlvEncryptionKey = 0x01a2,
+    // Testing
+    kTestEventTriggerKey = 0x01b1,
 };
 
 } // namespace Parameters
@@ -147,6 +150,7 @@ struct Storage : public GenericStorage,
     static constexpr size_t kHardwareVersionStrLengthMax = 32;
     static constexpr size_t kManufacturingDateLengthMax  = 11; // yyyy-mm-dd + \0
     static constexpr size_t kPersistentUniqueIdMaxLength = 16;
+    static constexpr size_t kSoftwareVersionStrLengthMax = 32;
     static constexpr size_t kSpake2pVerifierB64LengthMax = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_VerifierSerialized_Length) + 1;
     static constexpr size_t kSpake2pSaltB64LengthMax     = BASE64_ENCODED_LEN(chip::Crypto::kSpake2p_Max_PBKDF_Salt_Length) + 1;
     static constexpr size_t kFirmwareInfoSizeMax         = 32;
@@ -202,6 +206,7 @@ public:
     CHIP_ERROR GetHardwareVersionString(char * value, size_t max) override;
     CHIP_ERROR GetManufacturingDate(uint16_t & year, uint8_t & month, uint8_t & day) override;
     CHIP_ERROR GetRotatingDeviceIdUniqueId(MutableByteSpan & value) override;
+    CHIP_ERROR GetSoftwareVersionString(char * value, size_t max) override;
 
     //
     // CommissionableDataProvider
@@ -233,6 +238,7 @@ public:
     // ProvisionedDataProvider
     //
 
+    CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value);
     CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) override;
 
     //
@@ -267,6 +273,7 @@ private:
     CHIP_ERROR SetHardwareVersionString(const char * value, size_t len);
     CHIP_ERROR SetManufacturingDate(const char * value, size_t len);
     CHIP_ERROR GetManufacturingDate(uint8_t * value, size_t max, size_t & size);
+    CHIP_ERROR SetSoftwareVersionString(const char * value, size_t len);
     // PersistentUniqueId is used to generate the RotatingUniqueId
     // This PersistentUniqueId SHALL NOT be the same as the UniqueID attribute
     // exposed in the Basic Information cluster.

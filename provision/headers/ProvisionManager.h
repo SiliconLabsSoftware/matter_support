@@ -41,7 +41,7 @@ private:
 
     Storage mStore;
     Channel mChannel;
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
     Protocol1 mProtocol1;
 #endif
     Protocol2 mProtocol2;
