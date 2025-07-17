@@ -45,6 +45,8 @@ public:
      *                    CHIP_ERROR_INTERNAL, if there is a processing error when processing the enableKey
      */
     virtual CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) = 0;
+
+    virtual CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) = 0;
 };
 
 } // namespace Provision
