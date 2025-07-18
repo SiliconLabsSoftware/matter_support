@@ -46,7 +46,31 @@ public:
      */
     virtual CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & keySpan) = 0;
 
+    /**
+     * @brief Reads the OTA TLV encryption key ID from NVM.
+     *
+     * @param[out] value output buffer for the key ID
+     *
+     * @return CHIP_ERROR CHIP_NO_ERROR, if getting the key ID succeeds
+     *                    CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND, if the key ID wasn't found when trying to read it
+     *                    CHIP_ERROR_INTERNAL, if there is a processing error when processing the key ID
+     *                    CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE, if the feature is not supported
+     * @note This function is only functional if PSA Crypto is enabled.
+     */
     virtual CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) = 0;
+
+    /**
+     * @brief Decrypts the provided block using the OTA TLV encryption key.
+     * @param[in,out] block The block to decrypt. The size of the block must be a multiple of the block size.
+     * @param[in,out] mIVOffset The IV offset to use for decryption.
+     * @return CHIP_ERROR CHIP_NO_ERROR, if decryption succeeds
+     *                    CHIP_ERROR_BUFFER_TOO_SMALL, if the provided block is too small,
+     *                    CHIP_DEVICE_ERROR_CONFIG_NOT_FOUND, if the key ID wasn't found when trying to read it
+     *                    CHIP_ERROR_INTERNAL, if there is a processing error when processing the block
+     *                    CHIP_ERROR_UNSUPPORTED_CHIP_FEATURE, if the feature is not supported
+     * @note This function is only functional if PSA Crypto is disabled.
+     */
+    virtual CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset) = 0;
 };
 
 } // namespace Provision
