@@ -22,6 +22,15 @@ extern const sli_bt_gattdb_t gattdb;
 #define gattdb_CHIPoBLEChar_Tx                25
 #define gattdb_CHIPoBLEChar_C3                28
 
+#define gattdb_generic_attribute_len          2
+#define gattdb_service_changed_char_len       4
+#define gattdb_database_hash_len              16
+#define gattdb_client_support_features_len    1
+#define gattdb_device_name_len                13
+#define gattdb_CHIPoBLEChar_Rx_len            247
+#define gattdb_CHIPoBLEChar_Tx_len            247
+#define gattdb_CHIPoBLEChar_C3_len            512
+
 #if __cplusplus
 }
 #endif
