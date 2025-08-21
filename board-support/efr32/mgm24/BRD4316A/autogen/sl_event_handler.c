@@ -30,7 +30,6 @@
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "nvm3_default.h"
-#include "sl_cos.h"
 #include "sl_iostream_handles.h"
 
 void sli_driver_permanent_allocation(void)
@@ -94,7 +93,8 @@ void sl_service_init(void)
   sli_protocol_crypto_init();
   sli_crypto_init();
   sli_aes_seed_mask();
-  sl_iostream_init_instances();
+  sl_iostream_init_instances_stage_1();
+  sl_iostream_init_instances_stage_2();
 }
 
 void sl_stack_init(void)
@@ -114,7 +114,13 @@ void sl_internal_app_init(void)
   sl_ot_rtos_app_init();
 }
 
-void sl_iostream_init_instances(void)
+void sl_iostream_init_instances_stage_1(void)
 {
   sl_iostream_rtt_init();
 }
+
+void sl_iostream_init_instances_stage_2(void)
+{
+  sl_iostream_set_console_instance();
+}
+
