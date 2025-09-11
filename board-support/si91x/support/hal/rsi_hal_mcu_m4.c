@@ -20,6 +20,7 @@
 #include "rsi_rom_clks.h"
 #include "silabs_utils.h"
 #include "sl_component_catalog.h"
+#include "FreeRTOSConfig.h"
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_si91x_button_pin_config.h"
@@ -63,7 +64,7 @@ int soc_pll_config(void) {
   // Switch M4 clock to PLL clock for speed operations
   RSI_CLK_M4SocClkConfig(M4CLK, M4_SOCPLLCLK, 0);
 
-  SysTick_Config(SystemCoreClock / 1000);
+  SysTick_Config(SystemCoreClock / configTICK_RATE_HZ);
   DEBUGINIT();
 
 #ifdef SWITCH_QSPI_TO_SOC_PLL
