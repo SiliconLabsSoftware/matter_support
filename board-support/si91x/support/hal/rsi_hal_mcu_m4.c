@@ -20,9 +20,9 @@
 #include "rsi_rom_clks.h"
 #include "silabs_utils.h"
 #include "sl_component_catalog.h"
-#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
+#ifndef SL_ICD_ENABLED
 #include "FreeRTOSConfig.h"
-#endif
+#endif // !defined (SL_ICD_ENABLED)
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 #include "sl_si91x_button_pin_config.h"
@@ -54,7 +54,7 @@
 void sl_button_on_change(uint8_t btn, uint8_t btnAction);
 #endif  //SL_CATALOG_SIMPLE_BUTTON_PRESENT
 
-#if CHIP_CONFIG_ENABLE_ICD_SERVER == 0
+#ifndef SL_ICD_ENABLED
 int soc_pll_config(void) {
   int32_t status = RSI_OK;
 
@@ -84,7 +84,7 @@ int soc_pll_config(void) {
 #endif /* SWITCH_QSPI_TO_SOC_PLL */
   return 0;
 }
-#endif
+#endif // !defined (SL_ICD_ENABLED)
 
 #ifdef SL_CATALOG_SIMPLE_BUTTON_PRESENT
 void sl_si91x_button_isr(uint8_t pin, int8_t state) {
