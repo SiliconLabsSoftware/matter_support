@@ -44,7 +44,7 @@ public:
 //------------------------------------------------------------------------------
 // Version 1
 //------------------------------------------------------------------------------
-#ifdef SILABS_PROVISION_PROTOCOL_V1
+#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
 
 class Protocol1 : public Protocol
 {
