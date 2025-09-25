@@ -8,15 +8,15 @@ on:
 
 jobs:
   verify-changed-files:
-    if: ${{ github.actor != 'github-actions[bot]' }}
+    if: ${{ github.actor != 'silabs-matter-ci-bot[bot]' }}
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get list of changed files and check for unauthorized changes
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const { data: commits } = await github.rest.pulls.listCommits({
