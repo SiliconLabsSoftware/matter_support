@@ -243,7 +243,12 @@ public:
 
     CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & mIVOffset);
     CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value) override;
+    
+    //
+    // Migration
+    //
 
+    CHIP_ERROR MigrateAttestationCredentialAPI();
     //
     // Other
     //
