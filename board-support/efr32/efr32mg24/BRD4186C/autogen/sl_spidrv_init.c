@@ -2,7 +2,6 @@
 #include "sl_spidrv_instances.h"
 #include "sl_assert.h"
 
-#if defined(WF200_WIFI) || defined(EXP_BOARD) // USART is used in MG24 + WF200 and MG24 + 917 NCP combination
 #include "sl_spidrv_exp_config.h"
 
 SPIDRV_HandleData_t sl_spidrv_exp_handle_data;
@@ -47,5 +46,3 @@ void sl_spidrv_init_instances(void)
 {
   SPIDRV_Init(sl_spidrv_exp_handle, &sl_spidrv_init_exp);
 }
-
-#endif //defined(WF200_WIFI) || defined(EXP_BOARD)
