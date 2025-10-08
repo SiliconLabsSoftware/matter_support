@@ -1,8 +1,6 @@
 #ifndef _BRD4186C_H_
 #define _BRD4186C_H_
 
-/* WF200 */
-
 #define PIN_OUT_SET	    	1
 #define PIN_OUT_CLEAR		0
 
@@ -29,7 +27,5 @@
 
 #define SL_WFX_HOST_PINOUT_SPI_CS_PORT SL_GPIO_PORT_C
 #define SL_WFX_HOST_PINOUT_SPI_CS_PIN 0
-
-/* WF200 */
 
 #endif /* _BRD4186C_H_ */
