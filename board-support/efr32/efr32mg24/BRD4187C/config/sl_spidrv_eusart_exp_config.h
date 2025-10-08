@@ -25,13 +25,8 @@
 
 // <o SL_SPIDRV_EUSART_EXP_BITRATE> SPI bitrate
 // <i> Default: 1000000
-#ifdef RS911X_WIFI
-#define SL_SPIDRV_EUSART_EXP_BITRATE           10000000
-#endif
 
-#ifdef WF200_WIFI
 #define SL_SPIDRV_EUSART_EXP_BITRATE           20000000
-#endif
 
 // <o SL_SPIDRV_EUSART_EXP_FRAME_LENGTH> SPI frame length <7-16>
 // <i> Default: 8
