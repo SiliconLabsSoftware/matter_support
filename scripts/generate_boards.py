@@ -122,6 +122,8 @@ def _parse_args():
                         help="Option to delete files step for each generation.")
     parser.add_argument("--revert-changes", metavar="revert-changes", required=False, type=_convertStrToBool, default=False,
                         help="Option to revert changes to all files that changed. Should only be used after validating the changes aren't necessary.")
+    parser.add_argument("--clean", metavar="clean_output_dir", required=False, type=_convertStrToBool, default=True,
+                        help="Clean the final generation output location before generation.")
 
     return parser.parse_args()
 
@@ -155,7 +157,8 @@ def _configure_sdk(si_sdk_path):
     Configures slc sdk permissions to enable generation
     """
     subprocess.run(["slc", "configuration", "--sdk", si_sdk_path], check=True)
-    subprocess.run(["slc", "signature", "trust", "--sdk", si_sdk_path], check=True)
+    subprocess.run(["slc", "signature", "trust",
+                   "--sdk", si_sdk_path], check=True)
 
 
 def _generate_slc(args):
@@ -182,13 +185,13 @@ def _generate_slc(args):
 
     if board == Boards.ALL:
         _generate_all_boards(si_sdk_path=args.sdk, slcp_path=args.slcp, output_path=args.output,
-                             delete_files=args.delete_files, revert_changes=args.revert_changes)
+                             delete_files=args.delete_files, revert_changes=args.revert_changes, clean_output_dir=args.clean)
     else:
         _generate_board(board=_boards[board], si_sdk_path=args.sdk, slcp_path=args.slcp,
-                        output_path=args.output, delete_files=args.delete_files, revert_changes=args.revert_changes)
+                        output_path=args.output, delete_files=args.delete_files, revert_changes=args.revert_changes, clean_output_dir=args.clean)
 
 
-def _generate_all_boards(si_sdk_path: str, slcp_path: str, output_path: str, delete_files: bool, revert_changes: bool):
+def _generate_all_boards(si_sdk_path: str, slcp_path: str, output_path: str, delete_files: bool, revert_changes: bool, clean_output_dir: bool):
     """
     Generates slc files for all supported boards.
 
@@ -202,10 +205,10 @@ def _generate_all_boards(si_sdk_path: str, slcp_path: str, output_path: str, del
 
     for board in _boards:
         _generate_board(board=_boards[board], si_sdk_path=si_sdk_path,
-                        slcp_path=slcp_path, output_path=output_path, delete_files=delete_files, revert_changes=revert_changes)
+                        slcp_path=slcp_path, output_path=output_path, delete_files=delete_files, revert_changes=revert_changes, clean_output_dir=clean_output_dir)
 
 
-def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path: str, delete_files: bool, revert_changes: bool):
+def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path: str, delete_files: bool, revert_changes: bool, clean_output_dir: bool):
     """
     Generates the SLC (System Level Configuration) for a specific board.
 
@@ -222,10 +225,15 @@ def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path:
     si_sdk_path = Path(si_sdk_path)
     slcp_path = Path(slcp_path)
     output_path = Path(output_path)
-    output_path = os.path.join(output_path, board.family.value, board.board.value)
+    output_path = os.path.join(
+        output_path, board.family.value, board.board.value)
+
+    if clean_output_dir:
+        _clean_output_directory(output_path)
 
     # run slc generate command
-    subprocess.run(["slc", "generate", slcp_path, "-d", output_path, "--with", board.slc_arguments], check=True)
+    subprocess.run(["slc", "generate", slcp_path, "-d",
+                   output_path, "--with", board.slc_arguments], check=True)
 
     # delete files generated files
     if delete_files:
@@ -235,6 +243,22 @@ def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path:
     # Revert changes
     if revert_changes:
         _revert_changes(output_path)
+
+
+def _clean_output_directory(output_path: Path):
+    """
+    Cleans the output directory by removing all files and subdirectories.
+
+    Args:
+        output_path (Path): The path to the output directory to be cleaned.
+
+    """
+    output_path = Path(output_path)
+    if output_path.exists() and output_path.is_dir():
+        shutil.rmtree(output_path)
+        print(f"Cleaned output directory: {output_path}")
+    else:
+        print(f"Output directory does not exist: {output_path}")
 
 
 def _delete_files(output_path: Path):
@@ -248,6 +272,7 @@ def _delete_files(output_path: Path):
 
     # Files to delete after each generation
     files_to_delete = ["autogen/.crc_config.crc",
+                       "autogen/gen.properties",
                        "autogen/linkerfile.ld",
                        "config/prioconf/priority_config.prioconf",
                        "config/FreeRTOSConfig.h",
@@ -279,7 +304,8 @@ def _delete_directories(output_path: Path):
     """
     # Directories to delete after each generation
     directories_to_delete = ["linker_options",
-                             "matter-platform_cmake"]
+                             "matter-platform_cmake",
+                             "autogen/.slc_state"]
 
     # Loop and delete directories if they exist
     for dir_path in directories_to_delete:
