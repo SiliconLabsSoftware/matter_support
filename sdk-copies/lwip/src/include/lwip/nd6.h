@@ -62,46 +62,11 @@ extern "C" {
 #ifndef ND6_RTR_SOLICITATION_INTERVAL
 #define ND6_RTR_SOLICITATION_INTERVAL  4000
 #endif
-#if SL_LWIP_ECO_TIMERS 
-/** Timer interval for active states like INCOMPLETE, DELAY, PROBE (1 second) */
-#ifndef ND6_TMR_ACTIVE_INTERVAL
-#define ND6_TMR_ACTIVE_INTERVAL  1000
-#endif
-
-/** Timer interval for eco states like STALE and REACHABLE (3 seconds) */
-#ifndef ND6_TMR_ECO_INTERVAL
-#define ND6_TMR_ECO_INTERVAL  3000
-#endif
-
-/** Minimum timer interval in milliseconds to ensure optimal performance when multiple timers exist */
-#ifndef ND6_MIN_TMR_INTERVAL
-#define ND6_MIN_TMR_INTERVAL  1000
-#endif
-
-/** Maximum timer value that won't overflow when multiplied by 1000 */
-#ifndef ND6_MAX_TIMER_VALUE_FOR_MULTIPLICATION
-#define ND6_MAX_TIMER_VALUE_FOR_MULTIPLICATION  (UINT32_MAX / 1000)
-#endif
-
-/** Maximum 32-bit unsigned integer value */
-#ifndef ND6_MAX_U32_VALUE
-#define ND6_MAX_U32_VALUE  UINT32_MAX
-#endif
-
-/** Eco mode router solicitation interval adjustment in seconds */
-#ifndef ND6_ECO_RS_INTERVAL_ADJUSTMENT
-#define ND6_ECO_RS_INTERVAL_ADJUSTMENT  2
-#endif
-#endif
 
 struct pbuf;
 struct netif;
-#if SL_LWIP_ECO_TIMERS 
-void nd6_tmr_init(void);
-void nd6_tmr(void *arg);
-#else
+
 void nd6_tmr(void);
-#endif 
 void nd6_input(struct pbuf *p, struct netif *inp);
 void nd6_clear_destination_cache(void);
 struct netif *nd6_find_route(const ip6_addr_t *ip6addr);

@@ -5,12 +5,12 @@
  * @defgroup mld6 MLD6
  * @ingroup ip6
  * Multicast listener discovery for IPv6. Aims to be compliant with RFC 2710.
- * No support for MLDv2.\n
- * Note: The allnodes (ff01::1, ff02::1) group is assumed be received by your 
+ * No support for MLDv2.<br>
+ * Note: The allnodes (ff01::1, ff02::1) group is assumed be received by your
  * netif since it must always be received for correct IPv6 operation (e.g. SLAAC).
- * Ensure the netif filters are configured accordingly!\n
+ * Ensure the netif filters are configured accordingly!<br>
  * The netif flags also need NETIF_FLAG_MLD6 flag set to enable MLD6 on a
- * netif ("netif->flags |= NETIF_FLAG_MLD6;").\n
+ * netif ("netif->flags |= NETIF_FLAG_MLD6;").<br>
  * To be called from TCPIP thread.
  */
 
@@ -86,11 +86,6 @@ static err_t mld6_remove_group(struct netif *netif, struct mld_group *group);
 static void mld6_delayed_report(struct mld_group *group, u16_t maxresp);
 static void mld6_send(struct netif *netif, struct mld_group *group, u8_t type);
 
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-#include "lwip/timeouts.h"
-#include "stdbool.h"
-static bool is_tmr_start = false;
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
 
 /**
  * Stop MLD processing on interface
@@ -151,7 +146,7 @@ mld6_lookfor_group(struct netif *ifp, const ip6_addr_t *addr)
   struct mld_group *group = netif_mld6_data(ifp);
 
   while (group != NULL) {
-    if (ip6_addr_cmp(&(group->group_address), addr)) {
+    if (ip6_addr_eq(&(group->group_address), addr)) {
       return group;
     }
     group = group->next;
@@ -258,7 +253,7 @@ mld6_input(struct pbuf *p, struct netif *inp)
       while (group != NULL) {
         if ((!(ip6_addr_ismulticast_iflocal(&(group->group_address)))) &&
             (!(ip6_addr_isallnodes_linklocal(&(group->group_address))))) {
-          mld6_delayed_report(group, mld_hdr->max_resp_delay);
+          mld6_delayed_report(group, lwip_ntohs(mld_hdr->max_resp_delay));
         }
         group = group->next;
       }
@@ -270,7 +265,7 @@ mld6_input(struct pbuf *p, struct netif *inp)
       group = mld6_lookfor_group(inp, ip6_current_dest_addr());
       if (group != NULL) {
         /* Schedule a report. */
-        mld6_delayed_report(group, mld_hdr->max_resp_delay);
+        mld6_delayed_report(group, lwip_ntohs(mld_hdr->max_resp_delay));
       }
     }
     break; /* ICMP6_TYPE_MLQ */
@@ -490,14 +485,7 @@ mld6_leavegroup_netif(struct netif *netif, const ip6_addr_t *groupaddr)
   return ERR_VAL;
 }
 
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-static void mld6_timeout_cb(void *arg)
-{
-  LWIP_UNUSED_ARG(arg);
 
-  mld6_tmr();
-}
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
 /**
  * Periodic timer for mld processing. Must be called every
  * MLD6_TMR_INTERVAL milliseconds (100).
@@ -508,9 +496,6 @@ void
 mld6_tmr(void)
 {
   struct netif *netif;
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-  bool tmr_restart = false;
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
 
   NETIF_FOREACH(netif) {
     struct mld_group *group = netif_mld6_data(netif);
@@ -526,23 +511,10 @@ mld6_tmr(void)
             group->group_state = MLD6_GROUP_IDLE_MEMBER;
           }
         }
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-        else {
-          tmr_restart = true;
-        }
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
       }
       group = group->next;
     }
   }
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-  if (tmr_restart) {
-    sys_timeout(MLD6_TMR_INTERVAL, mld6_timeout_cb, NULL);
-  } else {
-    sys_untimeout(mld6_timeout_cb, NULL);
-    is_tmr_start = false;
-  }
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
 }
 
 /**
@@ -575,12 +547,6 @@ mld6_delayed_report(struct mld_group *group, u16_t maxresp_in)
       ((group->timer == 0) || (maxresp < group->timer)))) {
     group->timer = maxresp;
     group->group_state = MLD6_GROUP_DELAYING_MEMBER;
-#if SL_LWIP_MLD6_TIMERS_ONDEMAND
-  if (!is_tmr_start) {
-      sys_timeout(MLD6_TMR_INTERVAL, mld6_timeout_cb, NULL);
-      is_tmr_start = true;
-  }
-#endif /* SL_LWIP_MLD6_TIMERS_ONDEMAND */
   }
 }
 
