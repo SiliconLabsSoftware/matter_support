@@ -1,6 +1,5 @@
 #include "sl_event_handler.h"
 
-#include "system_si91x.h"
 #include "rsi_nvic_priorities_config.h"
 #include "sl_si91x_clock_manager.h"
 #include "sli_siwx917_soc.h"

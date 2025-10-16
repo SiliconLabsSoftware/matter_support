@@ -1,6 +1,5 @@
 #include "sl_event_handler.h"
 
-#include "system_si91x.h"
 #include "rsi_nvic_priorities_config.h"
 #include "sl_si91x_clock_manager.h"
 #include "sli_siwx917_soc.h"
@@ -37,7 +36,6 @@ void sli_internal_permanent_allocation(void)
 
 void sl_platform_init(void)
 {
-  SystemCoreClockUpdate();
   sl_si91x_device_init_nvic();
   sl_si91x_clock_manager_init();
   sli_si91x_platform_init();

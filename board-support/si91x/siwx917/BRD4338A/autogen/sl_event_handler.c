@@ -1,6 +1,5 @@
 #include "sl_event_handler.h"
 
-#include "system_si91x.h"
 #include "rsi_nvic_priorities_config.h"
 #include "sl_si91x_clock_manager.h"
 #include "sli_siwx917_soc.h"
@@ -10,7 +9,6 @@
 #include "sl_si91x_power_manager.h"
 #include "sl_si91x_power_manager_init.h"
 #endif // SL_ICD_ENABLED
-#include "sl_sleeptimer.h"
 #include "sl_si91x_button_instances.h"
 #include "sl_si91x_led_instances.h"
 #include "sl_ulp_timer_instances.h"
@@ -38,7 +36,6 @@ void sli_internal_permanent_allocation(void)
 
 void sl_platform_init(void)
 {
-  SystemCoreClockUpdate();
   sl_si91x_device_init_nvic();
   sl_si91x_clock_manager_init();
   sli_si91x_platform_init();
@@ -67,7 +64,6 @@ void sl_service_init(void)
   sl_si91x_power_manager_init();
   sli_si91x_power_manager_configure_ram_and_peripheral();
   #endif // SL_ICD_ENABLED
-  sl_sleeptimer_init();
   sl_mbedtls_init();
   sl_iostream_init_instances_stage_1();
   sl_iostream_init_instances_stage_2();
