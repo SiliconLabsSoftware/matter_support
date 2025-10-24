@@ -1,0 +1,37 @@
+From 7c097fd0e38bc2fe1e88b04a2807920a76dc4b61 Mon Sep 17 00:00:00 2001
+From: Ricardo Casallas <ricardo.casallas@silabs.com>
+Date: Mon, 7 Jul 2025 13:30:50 -0400
+Subject: [PATCH] PATCHING IN PROGRESS.
+
+---
+ util/third_party/mbedtls/library/x509_create.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/util/third_party/mbedtls/library/x509_create.c b/util/third_party/mbedtls/library/x509_create.c
+index 3ddd161639..7bf8873c97 100644
+--- a/util/third_party/mbedtls/library/x509_create.c
++++ b/util/third_party/mbedtls/library/x509_create.c
+@@ -20,6 +20,9 @@
+ 
+ #include "mbedtls/asn1.h"
+ 
++#define MBEDTLS_MATTER_VID "\x2B\x06\x01\x04\x01\x82\xA2\x7C\x02\x01"
++#define MBEDTLS_MATTER_PID "\x2B\x06\x01\x04\x01\x82\xA2\x7C\x02\x02"
++
+ /* Structure linking OIDs for X.509 DN AttributeTypes to their
+  * string representations and default string encodings used by Mbed TLS. */
+ typedef struct {
+@@ -95,6 +98,10 @@ static const x509_attr_descriptor_t x509_attrs[] =
+       MBEDTLS_OID_DOMAIN_COMPONENT, MBEDTLS_ASN1_IA5_STRING },
+     { ADD_STRLEN("DC"),
+       MBEDTLS_OID_DOMAIN_COMPONENT,   MBEDTLS_ASN1_IA5_STRING },
++    { ADD_STRLEN("1.3.6.1.4.1.37244.2.1"),
++      MBEDTLS_MATTER_VID, MBEDTLS_ASN1_UTF8_STRING },
++    { ADD_STRLEN("1.3.6.1.4.1.37244.2.2"),
++      MBEDTLS_MATTER_PID,  MBEDTLS_ASN1_UTF8_STRING },
+     { NULL, 0, NULL, MBEDTLS_ASN1_NULL }
+ };
+ 
+-- 
+2.49.0
+
