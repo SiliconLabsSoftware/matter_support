@@ -46,7 +46,7 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
-  #if !RSI_BLE_ENABLE
+  #if !SLI_SI91X_ENABLE_BLE
   sli_bt_stack_permanent_allocation();
 #endif
 
@@ -137,4 +137,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-

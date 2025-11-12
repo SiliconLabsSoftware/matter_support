@@ -4,10 +4,10 @@
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
 #include "pa_conversions_efr32.h"
-#if !RSI_BLE_ENABLE
+#if !SLI_SI91X_ENABLE_BLE
 #include "sl_bluetooth.h"
 #include "sl_rail_util_power_manager_init.h"
-#endif // !RSI_BLE_ENABLE
+#endif // !SLI_SI91X_ENABLE_BLE
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
 #include "btl_interface.h"
@@ -49,7 +49,7 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
-  #if !RSI_BLE_ENABLE
+  #if !SLI_SI91X_ENABLE_BLE
   sli_bt_stack_permanent_allocation();
 #endif
 
@@ -78,9 +78,9 @@ void sli_internal_init_early(void)
 
 void sl_kernel_start(void)
 {
-#if !RSI_BLE_ENABLE
+#if !SLI_SI91X_ENABLE_BLE
   sli_bt_rtos_adaptation_kernel_start();
-#endif // !RSI_BLE_ENABLE
+#endif // !SLI_SI91X_ENABLE_BLE
   osKernelStart();
 }
 
@@ -116,13 +116,13 @@ void sl_service_init(void)
 
 void sl_stack_init(void)
 {
-#if !RSI_BLE_ENABLE
+#if !SLI_SI91X_ENABLE_BLE
   sl_rail_util_pa_init();
   sl_rail_util_power_manager_init();
   sl_rail_util_pti_init();
   sl_rail_util_rssi_init();
   sli_bt_stack_functional_init();
-#endif // !RSI_BLE_ENABLE
+#endif // !SLI_SI91X_ENABLE_BLE
 
 #ifdef SL_OT_ENABLE
   sl_ot_sys_init();
@@ -146,4 +146,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-
