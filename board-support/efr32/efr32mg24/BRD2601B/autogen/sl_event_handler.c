@@ -27,7 +27,7 @@
 #include "sl_simple_rgb_pwm_led_instances.h"
 #else
 #include "sl_simple_led_instances.h"
-#endif
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
@@ -92,7 +92,7 @@ void sl_driver_init(void)
   sl_simple_rgb_pwm_led_init_instances();
 #else
   sl_simple_led_init_instances();
-#endif
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
   sl_uartdrv_init_instances();
 }
 
