@@ -18,13 +18,7 @@
 #include "sl_iostream_rtt.h"
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
-
-#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-#include "sl_simple_rgb_pwm_led_instances.h"
-#else
 #include "sl_simple_led_instances.h"
-#endif
-
 #include "sl_uartdrv_instances.h"
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
@@ -77,11 +71,7 @@ void sl_driver_init(void)
 {
   sl_gpio_init();
   GPIOINT_Init();
-#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-  sl_simple_rgb_pwm_led_init_instances();
-#else
   sl_simple_led_init_instances();
-#endif
   sl_uartdrv_init_instances();
 }
 
