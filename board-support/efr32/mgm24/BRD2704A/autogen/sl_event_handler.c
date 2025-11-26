@@ -115,4 +115,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-
