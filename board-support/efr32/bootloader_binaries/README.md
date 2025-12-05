@@ -1,6 +1,6 @@
 # Bootloader binaries for Matter
 
-This directory contains Silicon Labs Gecko Bootloader binaries that can be used with Matter OTA Software Update functionality. The binaries are provided here for historical purposes. The recommended way of obtaining bootloader binaries is by building the Matter Solutions with Studio or SLC SLC. 
+This directory contains Silicon Labs Gecko Bootloader binaries that can be used with Matter OTA Software Update functionality. The binaries are provided here for historical purposes. The recommended way of obtaining bootloader binaries is by building the Matter Solutions with Studio or SLC CLI. 
 
 - The external storage (SPI flash) bootloaders are configured with the slot size of 1024K 
 - All bootloaders supports LZMA compression
