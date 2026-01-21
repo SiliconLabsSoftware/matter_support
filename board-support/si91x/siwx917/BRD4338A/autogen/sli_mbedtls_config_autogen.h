@@ -3,7 +3,10 @@
 #ifndef SLI_MBEDTLS_CONFIG_AUTOGEN_H
 #define SLI_MBEDTLS_CONFIG_AUTOGEN_H
 
+// NOTE: This is added because the value is changed in the user config file.
+#ifndef MBEDTLS_MPI_MAX_SIZE
 #define MBEDTLS_MPI_MAX_SIZE 32
+#endif // MBEDTLS_MPI_MAX_SIZE
 
 #define MBEDTLS_NO_PLATFORM_ENTROPY
 #define MBEDTLS_AES_C
