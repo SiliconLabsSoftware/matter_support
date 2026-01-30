@@ -227,7 +227,7 @@ instance_info:
       name: "manufacturing_date"
       short: "md"
       type: "date"
-      max: 16
+      max: 10
 
     - id: 0x0154
       desc:
