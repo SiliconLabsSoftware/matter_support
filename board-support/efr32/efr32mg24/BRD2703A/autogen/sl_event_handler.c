@@ -3,7 +3,7 @@
 #include "sl_board_init.h"
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
-#include "pa_conversions_efr32.h"
+#include "sl_rail_util_compatible_pa.h"
 #include "sl_rail_util_power_manager_init.h"
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
@@ -20,9 +20,7 @@
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
 #include "sl_simple_led_instances.h"
-#if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
-#endif
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
 #include "sli_protocol_crypto.h"
@@ -73,13 +71,13 @@ void sl_kernel_start(void)
 
 void sl_driver_init(void)
 {
+  sl_debug_swo_init();
   sl_gpio_init();
   GPIOINT_Init();
   sl_simple_button_init_instances();
   sl_simple_led_init_instances();
-#if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
-#endif
+  sl_cos_send_config();
 }
 
 void sl_service_init(void)

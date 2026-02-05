@@ -1,9 +1,9 @@
 /***************************************************************************//**
  * @file
- * @brief SPI abstraction used by memory lcd display
+ * @brief PA Tables configuration file.
  *******************************************************************************
  * # License
- * <b>Copyright 2022 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,39 +28,22 @@
  *
  ******************************************************************************/
 
-#ifndef SL_MEMLCD_CONFIG_H
-#define SL_MEMLCD_CONFIG_H
+#ifndef SL_RAIL_UTIL_PA_TABLES_CONFIG_H
+#define SL_RAIL_UTIL_PA_TABLES_CONFIG_H
 
-// <<< sl:start pin_tool >>>
-// <usart signal=TX,CLK> SL_MEMLCD_SPI
-// $[USART_SL_MEMLCD_SPI]
-#define SL_MEMLCD_SPI_PERIPHERAL                 USART0
-#define SL_MEMLCD_SPI_PERIPHERAL_NO              0
+// <<< Use Configuration Wizard in Context Menu >>>
 
-// USART0 TX on PC00
-#define SL_MEMLCD_SPI_TX_PORT                    SL_GPIO_PORT_C
-#define SL_MEMLCD_SPI_TX_PIN                     0
+// <h> PA Table Configuration
+// <o SL_RAIL_UTIL_PA_TABLE_HEADER> PA Table Selection
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_10dbm.h"=> 10dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_0dbm.h"=> 0dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"=> 0dBm-10dBm automode PA powersetting mapping table
+// <i> Default: "sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"
+#define SL_RAIL_UTIL_PA_TABLE_HEADER    "sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"
+// </h>
 
-// USART0 CLK on PC02
-#define SL_MEMLCD_SPI_CLK_PORT                   SL_GPIO_PORT_C
-#define SL_MEMLCD_SPI_CLK_PIN                    2
+// <<< end of configuration section >>>
 
-// [USART_SL_MEMLCD_SPI]$
+#include SL_RAIL_UTIL_PA_TABLE_HEADER
 
-// <gpio> SL_MEMLCD_SPI_CS
-// $[GPIO_SL_MEMLCD_SPI_CS]
-#define SL_MEMLCD_SPI_CS_PORT                    SL_GPIO_PORT_C
-#define SL_MEMLCD_SPI_CS_PIN                     6
-
-// [GPIO_SL_MEMLCD_SPI_CS]$
-
-// <gpio optional=true> SL_MEMLCD_EXTCOMIN
-// $[GPIO_SL_MEMLCD_EXTCOMIN]
-#define SL_MEMLCD_EXTCOMIN_PORT                  SL_GPIO_PORT_A
-#define SL_MEMLCD_EXTCOMIN_PIN                   0
-
-// [GPIO_SL_MEMLCD_EXTCOMIN]$
-
-// <<< sl:end pin_tool >>>
-
-#endif
+#endif // SL_RAIL_UTIL_PA_TABLES_CONFIG_H

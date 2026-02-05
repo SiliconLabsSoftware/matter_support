@@ -1,9 +1,9 @@
 /***************************************************************************//**
  * @file
- * @brief LED Driver Instances
+ * @brief PA Tables configuration file.
  *******************************************************************************
  * # License
- * <b>Copyright 2019 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,19 +28,22 @@
  *
  ******************************************************************************/
 
-#ifndef SL_SIMPLE_LED_INSTANCES_H
-#define SL_SIMPLE_LED_INSTANCES_H
+#ifndef SL_RAIL_UTIL_PA_TABLES_CONFIG_H
+#define SL_RAIL_UTIL_PA_TABLES_CONFIG_H
 
-#include "sl_simple_led.h"
+// <<< Use Configuration Wizard in Context Menu >>>
 
-extern const sl_led_t sl_led_led0;
-extern const sl_led_t sl_led_led1;
+// <h> PA Table Configuration
+// <o SL_RAIL_UTIL_PA_TABLE_HEADER> PA Table Selection
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_bga_10dbm.h"=> 10dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_bga_0dbm.h"=> 0dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_bga_automode_0_10dbm.h"=> 0dBm-10dBm automode PA powersetting mapping table
+// <i> Default: "sl_rail_util_pa_dbm_powersetting_mapping_table_bga_automode_0_10dbm.h"
+#define SL_RAIL_UTIL_PA_TABLE_HEADER    "sl_rail_util_pa_dbm_powersetting_mapping_table_bga_automode_0_10dbm.h"
+// </h>
 
-extern const sl_led_t *sl_simple_led_array[];
+// <<< end of configuration section >>>
 
-#define SL_SIMPLE_LED_COUNT 2
-#define SL_SIMPLE_LED_INSTANCE(n) (sl_simple_led_array[n])
+#include SL_RAIL_UTIL_PA_TABLE_HEADER
 
-void sl_simple_led_init_instances(void);
-
-#endif // SL_SIMPLE_LED_INIT_H
+#endif // SL_RAIL_UTIL_PA_TABLES_CONFIG_H

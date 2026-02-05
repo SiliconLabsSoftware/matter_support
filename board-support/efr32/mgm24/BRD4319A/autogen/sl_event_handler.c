@@ -3,7 +3,7 @@
 #include "sl_board_init.h"
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
-#include "pa_conversions_efr32.h"
+#include "sl_rail_util_compatible_pa.h"
 #include "sl_rail_util_power_manager_init.h"
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
@@ -13,6 +13,7 @@
 #include "platform-efr32.h"
 #include "sl_bt_rtos_adaptation.h"
 #include "sl_bluetooth.h"
+#include "sl_debug_swo.h"
 #include "sl_gpio.h"
 #include "gpiointerrupt.h"
 #include "sl_iostream_rtt.h"
@@ -27,6 +28,7 @@
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "nvm3_default.h"
+#include "sl_cos.h"
 #include "sl_iostream_handles.h"
 
 void sli_driver_permanent_allocation(void)
@@ -69,12 +71,12 @@ void sl_kernel_start(void)
 
 void sl_driver_init(void)
 {
+  sl_debug_swo_init();
   sl_gpio_init();
   GPIOINT_Init();
   sl_simple_button_init_instances();
-#if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
-#endif
+  sl_cos_send_config();
 }
 
 void sl_service_init(void)

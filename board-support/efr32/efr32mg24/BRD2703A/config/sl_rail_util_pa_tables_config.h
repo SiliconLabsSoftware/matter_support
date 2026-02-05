@@ -1,9 +1,9 @@
 /***************************************************************************//**
  * @file
- * @brief Simple Led Driver Configuration
+ * @brief PA Tables configuration file.
  *******************************************************************************
  * # License
- * <b>Copyright 2019 Silicon Laboratories Inc. www.silabs.com</b>
+ * <b>Copyright 2025 Silicon Laboratories Inc. www.silabs.com</b>
  *******************************************************************************
  *
  * SPDX-License-Identifier: Zlib
@@ -28,30 +28,22 @@
  *
  ******************************************************************************/
 
-#ifndef SL_SIMPLE_LED_LED0_CONFIG_H
-#define SL_SIMPLE_LED_LED0_CONFIG_H
+#ifndef SL_RAIL_UTIL_PA_TABLES_CONFIG_H
+#define SL_RAIL_UTIL_PA_TABLES_CONFIG_H
 
 // <<< Use Configuration Wizard in Context Menu >>>
 
-// <h> Simple LED configuration
-// <o SL_SIMPLE_LED_LED0_POLARITY>
-// <SL_SIMPLE_LED_POLARITY_ACTIVE_LOW=> Active low
-// <SL_SIMPLE_LED_POLARITY_ACTIVE_HIGH=> Active high
-// <i> Default: SL_SIMPLE_LED_POLARITY_ACTIVE_HIGH
-#define SL_SIMPLE_LED_LED0_POLARITY SL_SIMPLE_LED_POLARITY_ACTIVE_HIGH
-// </h> end led configuration
+// <h> PA Table Configuration
+// <o SL_RAIL_UTIL_PA_TABLE_HEADER> PA Table Selection
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_10dbm.h"=> 10dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_0dbm.h"=> 0dBm PA powersetting mapping table
+// <"sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"=> 0dBm-10dBm automode PA powersetting mapping table
+// <i> Default: "sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"
+#define SL_RAIL_UTIL_PA_TABLE_HEADER    "sl_rail_util_pa_dbm_powersetting_mapping_table_automode_0_10dbm.h"
+// </h>
 
 // <<< end of configuration section >>>
 
-// <<< sl:start pin_tool >>>
+#include SL_RAIL_UTIL_PA_TABLE_HEADER
 
-// <gpio> SL_SIMPLE_LED_LED0
-// $[GPIO_SL_SIMPLE_LED_LED0]
-#define SL_SIMPLE_LED_LED0_PORT                  SL_GPIO_PORT_B
-#define SL_SIMPLE_LED_LED0_PIN                   2
-
-// [GPIO_SL_SIMPLE_LED_LED0]$
-
-// <<< sl:end pin_tool >>>
-
-#endif // SL_SIMPLE_LED_LED0_CONFIG_H
+#endif // SL_RAIL_UTIL_PA_TABLES_CONFIG_H

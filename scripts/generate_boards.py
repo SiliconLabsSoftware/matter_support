@@ -152,15 +152,6 @@ def _convertStrToBool(value):
         raise argparse.ArgumentTypeError('Boolean value expected.')
 
 
-def _configure_sdk(si_sdk_path):
-    """
-    Configures slc sdk permissions to enable generation
-    """
-    subprocess.run(["slc", "configuration", "--sdk", si_sdk_path], check=True)
-    subprocess.run(["slc", "signature", "trust",
-                   "--sdk", si_sdk_path], check=True)
-
-
 def _generate_slc(args):
     """
     Main application function
@@ -222,7 +213,7 @@ def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path:
     """
 
     # Configure path variables
-    si_sdk_path = Path(si_sdk_path)
+    si_sdk_path
     slcp_path = Path(slcp_path)
     output_path = Path(output_path)
     output_path = os.path.join(
@@ -233,7 +224,7 @@ def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path:
 
     # run slc generate command
     subprocess.run(["slc", "generate", slcp_path, "-d",
-                   output_path, "--with", board.slc_arguments], check=True)
+                   output_path, "--sdk-package-path", si_sdk_path, "--with", board.slc_arguments], check=True)
 
     # delete files generated files
     if delete_files:
@@ -282,6 +273,7 @@ def _delete_files(output_path: Path):
                        "config/sl_debug_swo_config.h",
                        "matter-platform.Makefile",
                        "matter-platform.project.mak",
+                       "config/btconf/slc_args.json",
                        "vscode.conf"]
 
     # Loop and delete files if they exist
@@ -305,7 +297,8 @@ def _delete_directories(output_path: Path):
     # Directories to delete after each generation
     directories_to_delete = ["linker_options",
                              "matter-platform_cmake",
-                             "autogen/.slc_state"]
+                             "autogen/.slc_state",
+                             "cmake_gcc"]
 
     # Loop and delete directories if they exist
     for dir_path in directories_to_delete:
@@ -347,10 +340,7 @@ def _revert_changes(output_path: Path):
 def main(args) -> int:
     args.board = args.board.upper()
 
-    # Step 1: Configure slc sdk permissions for generation
-    _configure_sdk(args.sdk)
-
-    # Step 2: Generate slc files
+    # Step 1: Generate slc files
     _generate_slc(args)
 
 
