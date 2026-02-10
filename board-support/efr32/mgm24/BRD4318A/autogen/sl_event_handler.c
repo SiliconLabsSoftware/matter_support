@@ -16,7 +16,9 @@
 #include "sl_debug_swo.h"
 #include "sl_gpio.h"
 #include "gpiointerrupt.h"
+#if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include "sl_i2cspm_instances.h"
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include "sl_iostream_rtt.h"
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
@@ -72,13 +74,13 @@ void sl_kernel_start(void)
 
 void sl_driver_init(void)
 {
-  sl_debug_swo_init();
   sl_gpio_init();
   GPIOINT_Init();
+  #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   sl_i2cspm_init_instances();
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   sl_simple_button_init_instances();
   sl_uartdrv_init_instances();
-  sl_cos_send_config();
 }
 
 void sl_service_init(void)
@@ -121,4 +123,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-

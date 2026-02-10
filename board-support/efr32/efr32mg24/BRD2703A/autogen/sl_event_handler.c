@@ -71,13 +71,11 @@ void sl_kernel_start(void)
 
 void sl_driver_init(void)
 {
-  sl_debug_swo_init();
   sl_gpio_init();
   GPIOINT_Init();
   sl_simple_button_init_instances();
   sl_simple_led_init_instances();
   sl_uartdrv_init_instances();
-  sl_cos_send_config();
 }
 
 void sl_service_init(void)
@@ -119,4 +117,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-
