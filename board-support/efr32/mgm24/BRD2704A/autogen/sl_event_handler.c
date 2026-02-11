@@ -4,6 +4,10 @@
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
 #include "sl_rail_util_compatible_pa.h"
+#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#include "sl_bluetooth.h"
+#include "sl_rail_util_power_manager_init.h"
+#endif // !SLI_SI91X_ENABLE_BLE
 #include "sl_rail_util_power_manager_init.h"
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
@@ -20,7 +24,12 @@
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_led_instances.h"
+#if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
+#endif // CONFIG_ENABLE_UART
+#ifdef SL_WIFI
+#include "sl_spidrv_instances.h"
+#endif
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
 #include "sli_protocol_crypto.h"
@@ -28,7 +37,7 @@
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "nvm3_default.h"
-#include "sl_cos.h"
+
 #include "sl_iostream_handles.h"
 
 void sli_driver_permanent_allocation(void)
@@ -74,7 +83,9 @@ void sl_driver_init(void)
   sl_gpio_init();
   GPIOINT_Init();
   sl_simple_led_init_instances();
+  #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
+#endif // CONFIG_ENABLE_UART
 }
 
 void sl_service_init(void)
@@ -98,14 +109,18 @@ void sl_stack_init(void)
   sl_rail_util_pti_init();
   sl_rail_util_rssi_init();
   sl_fem_util_init();
+  #ifdef SL_OT_ENABLE
   sl_ot_sys_init();
+#endif // SL_OT_ENABLE
   sli_bt_stack_functional_init();
 }
 
 void sl_internal_app_init(void)
 {
+#ifdef SL_OT_ENABLE
   sl_ot_rtos_stack_init();
   sl_ot_rtos_app_init();
+#endif // SL_OT_ENABLE
 }
 
 void sl_iostream_init_instances_stage_1(void)

@@ -5,7 +5,10 @@
 
 // NOTE: This is added because the value is changed in the user config file.
 #ifndef MBEDTLS_MPI_MAX_SIZE
+// Added definition check because of DIC specific configs
+#ifndef MBEDTLS_MPI_MAX_SIZE
 #define MBEDTLS_MPI_MAX_SIZE 32
+#endif
 #endif // MBEDTLS_MPI_MAX_SIZE
 
 #define MBEDTLS_NO_PLATFORM_ENTROPY

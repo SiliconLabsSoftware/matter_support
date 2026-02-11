@@ -30,6 +30,8 @@
 
 #include <sl_common.h>
 #include "sl_bluetooth.h"
+#include "sli_bt_api.h"
+#include "sli_bgapi.h"
 #include "sl_assert.h"
 #include "sl_bt_stack_init.h"
 #include "sl_component_catalog.h"

@@ -77,6 +77,10 @@
  
  #include "sl_openthread_radio_config.h"
  #include "sl_rail_util_compatible_pa.h"
+#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#include "sl_bluetooth.h"
+#include "sl_rail_util_power_manager_init.h"
+#endif // !SLI_SI91X_ENABLE_BLE
  #include "openthread/platform-abstraction/efr32/soft_source_match_table.h"
  
  #ifdef SL_COMPONENT_CATALOG_PRESENT

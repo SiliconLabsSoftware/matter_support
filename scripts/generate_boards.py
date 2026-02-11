@@ -273,7 +273,6 @@ def _delete_files(output_path: Path):
                        "config/sl_debug_swo_config.h",
                        "matter-platform.Makefile",
                        "matter-platform.project.mak",
-                       "config/btconf/slc_args.json",
                        "vscode.conf"]
 
     # Loop and delete files if they exist
@@ -298,7 +297,8 @@ def _delete_directories(output_path: Path):
     directories_to_delete = ["linker_options",
                              "matter-platform_cmake",
                              "autogen/.slc_state",
-                             "cmake_gcc"]
+                             "cmake_gcc",
+                             "config/btconf"]
 
     # Loop and delete directories if they exist
     for dir_path in directories_to_delete:
