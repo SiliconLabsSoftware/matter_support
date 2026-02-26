@@ -37,7 +37,11 @@
 // <h> EUSART settings
 // <o SL_UARTDRV_EUSART_VCOM_BAUDRATE> Baud rate
 // <i> Default: 115200
+#if defined(VERBOSE_MODE) && (VERBOSE_MODE ==1)
 #define SL_UARTDRV_EUSART_VCOM_BAUDRATE        921600
+#else 
+#define SL_UARTDRV_EUSART_VCOM_BAUDRATE        115200
+#endif
 
 // <o SL_UARTDRV_EUSART_VCOM_LF_MODE> Low frequency mode
 // <true=> True
@@ -95,22 +99,24 @@
 // <<< sl:start pin_tool >>>
 // <eusart signal=TX,RX,(CTS),(RTS)> SL_UARTDRV_EUSART_VCOM
 // $[EUSART_SL_UARTDRV_EUSART_VCOM]
-#ifndef SL_UARTDRV_EUSART_VCOM_PERIPHERAL       
 #define SL_UARTDRV_EUSART_VCOM_PERIPHERAL        EUSART0
-#endif
-#ifndef SL_UARTDRV_EUSART_VCOM_PERIPHERAL_NO    
 #define SL_UARTDRV_EUSART_VCOM_PERIPHERAL_NO     0
-#endif
 
 // EUSART0 TX on PA08
-#ifndef SL_UARTDRV_EUSART_VCOM_TX_PORT          
 #define SL_UARTDRV_EUSART_VCOM_TX_PORT           SL_GPIO_PORT_A
-#endif
-#ifndef SL_UARTDRV_EUSART_VCOM_TX_PIN           
 #define SL_UARTDRV_EUSART_VCOM_TX_PIN            8
-#endif
 
+// EUSART0 RX on PA09
+#define SL_UARTDRV_EUSART_VCOM_RX_PORT           SL_GPIO_PORT_A
+#define SL_UARTDRV_EUSART_VCOM_RX_PIN            9
 
+// EUSART0 CTS on PB05
+#define SL_UARTDRV_EUSART_VCOM_CTS_PORT          SL_GPIO_PORT_B
+#define SL_UARTDRV_EUSART_VCOM_CTS_PIN           5
+
+// EUSART0 RTS on PA00
+#define SL_UARTDRV_EUSART_VCOM_RTS_PORT          SL_GPIO_PORT_A
+#define SL_UARTDRV_EUSART_VCOM_RTS_PIN           0
 
 // [EUSART_SL_UARTDRV_EUSART_VCOM]$
 // <<< sl:end pin_tool >>>
