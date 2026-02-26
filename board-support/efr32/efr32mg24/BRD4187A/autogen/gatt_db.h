@@ -5,6 +5,10 @@
 #ifndef __GATT_DB_H
 #define __GATT_DB_H
 
+#if __cplusplus
+extern "C" {
+#endif
+
 #include "sli_bt_gattdb_def.h"
 
 extern const sli_bt_gattdb_t gattdb;
@@ -27,5 +31,8 @@ extern const sli_bt_gattdb_t gattdb;
 #define gattdb_CHIPoBLEChar_Tx_len            247
 #define gattdb_CHIPoBLEChar_C3_len            512
 
+#if __cplusplus
+}
+#endif
 
 #endif // __GATT_DB_H
