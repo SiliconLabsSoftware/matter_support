@@ -125,7 +125,7 @@ void sl_stack_init(void)
   sl_rail_util_rssi_init();
   sli_bt_stack_functional_init();
 #endif // !SLI_SI91X_ENABLE_BLE
-  #ifdef SL_OT_ENABLE
+#ifdef SL_OT_ENABLE
   sl_ot_sys_init();
 #endif // SL_OT_ENABLE
 }
