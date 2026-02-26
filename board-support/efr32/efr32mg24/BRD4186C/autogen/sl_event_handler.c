@@ -82,7 +82,9 @@ void sli_internal_init_early(void)
 
 void sl_kernel_start(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sli_bt_rtos_adaptation_kernel_start();
+#endif // !SLI_SI91X_ENABLE_BLE
   osKernelStart();
 }
 
