@@ -121,15 +121,17 @@ void sl_service_init(void)
 
 void sl_stack_init(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sl_rail_util_pa_init();
   sl_rail_util_power_manager_init();
   sl_rail_util_pti_init();
   sl_rail_util_rssi_init();
   sl_fem_util_init();
+  sli_bt_stack_functional_init();
+#endif // !SLI_SI91X_ENABLE_BLE
   #ifdef SL_OT_ENABLE
   sl_ot_sys_init();
 #endif // SL_OT_ENABLE
-  sli_bt_stack_functional_init();
 }
 
 void sl_internal_app_init(void)
