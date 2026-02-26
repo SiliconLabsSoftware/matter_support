@@ -213,7 +213,6 @@ def _generate_board(board: Board, si_sdk_path: str, slcp_path: str, output_path:
     """
 
     # Configure path variables
-    si_sdk_path
     slcp_path = Path(slcp_path)
     output_path = Path(output_path)
     output_path = os.path.join(
