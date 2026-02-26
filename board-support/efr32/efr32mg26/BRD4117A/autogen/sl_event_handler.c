@@ -32,7 +32,6 @@
 #else
 #include "sl_simple_led_instances.h"
 #endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-#include "sl_simple_led_instances.h"
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
 #endif // CONFIG_ENABLE_UART
@@ -100,7 +99,6 @@ void sl_driver_init(void)
 #else
   sl_simple_led_init_instances();
 #endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-  sl_simple_led_init_instances();
   #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
 #endif // CONFIG_ENABLE_UART
