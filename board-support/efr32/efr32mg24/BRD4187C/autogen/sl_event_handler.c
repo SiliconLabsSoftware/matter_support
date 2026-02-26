@@ -58,8 +58,12 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sli_bt_stack_permanent_allocation();
+#endif // !SLI_SI91X_ENABLE_BLE
+#ifdef SL_OT_ENABLE
   sl_ot_rtos_perm_allocation();
+#endif // SL_OT_ENABLE
 }
 
 void sli_internal_permanent_allocation(void)
@@ -82,7 +86,9 @@ void sli_internal_init_early(void)
 
 void sl_kernel_start(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sli_bt_rtos_adaptation_kernel_start();
+#endif // !SLI_SI91X_ENABLE_BLE
   osKernelStart();
 }
 
