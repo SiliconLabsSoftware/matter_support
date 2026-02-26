@@ -24,6 +24,12 @@
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
+
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+#include "sl_simple_rgb_pwm_led_instances.h"
+#else
+#include "sl_simple_led_instances.h"
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 #include "sl_simple_led_instances.h"
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
@@ -87,6 +93,11 @@ void sl_driver_init(void)
   sl_i2cspm_init_instances();
 #endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   sl_simple_button_init_instances();
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+  sl_simple_rgb_pwm_led_init_instances();
+#else
+  sl_simple_led_init_instances();
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
   sl_simple_led_init_instances();
   #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
