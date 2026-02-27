@@ -3,10 +3,12 @@
 #include "sl_board_init.h"
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
-#include "pa_conversions_efr32.h"
-#if !SLI_SI91X_ENABLE_BLE
+#include "sl_rail_util_compatible_pa.h"
+#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#include "sl_bluetooth.h"
 #include "sl_rail_util_power_manager_init.h"
-#endif
+#endif // !SLI_SI91X_ENABLE_BLE
+#include "sl_rail_util_power_manager_init.h"
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
 #include "btl_interface.h"
@@ -24,7 +26,12 @@
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
+
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+#include "sl_simple_rgb_pwm_led_instances.h"
+#else
 #include "sl_simple_led_instances.h"
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
 #endif // CONFIG_ENABLE_UART
@@ -38,7 +45,7 @@
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "nvm3_default.h"
-#include "sl_cos.h"
+
 #include "sl_iostream_handles.h"
 
 void sli_driver_permanent_allocation(void)
@@ -51,13 +58,8 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
-#if !SLI_SI91X_ENABLE_BLE
   sli_bt_stack_permanent_allocation();
-#endif
-
-#ifdef SL_OT_ENABLE
   sl_ot_rtos_perm_allocation();
-#endif
 }
 
 void sli_internal_permanent_allocation(void)
@@ -89,15 +91,17 @@ void sl_kernel_start(void)
 void sl_driver_init(void)
 {
   sl_gpio_init();
-#ifdef SL_WIFI
-  sl_spidrv_init_instances();
-#endif
+  GPIOINT_Init();
 #if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   sl_i2cspm_init_instances();
 #endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   sl_simple_button_init_instances();
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+  sl_simple_rgb_pwm_led_init_instances();
+#else
   sl_simple_led_init_instances();
-#if defined(CONFIG_ENABLE_UART)
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+  #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
 #endif // CONFIG_ENABLE_UART
 }
@@ -124,8 +128,7 @@ void sl_stack_init(void)
   sl_rail_util_pti_init();
   sl_rail_util_rssi_init();
   sli_bt_stack_functional_init();
-#endif
-
+#endif // !SLI_SI91X_ENABLE_BLE
 #ifdef SL_OT_ENABLE
   sl_ot_sys_init();
 #endif // SL_OT_ENABLE

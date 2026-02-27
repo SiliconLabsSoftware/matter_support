@@ -43,8 +43,12 @@
 
 // <gpio> SL_BOARD_ENABLE_VCOM
 // $[GPIO_SL_BOARD_ENABLE_VCOM]
-#define SL_BOARD_ENABLE_VCOM_PORT               SL_GPIO_PORT_C
-#define SL_BOARD_ENABLE_VCOM_PIN                1
+#ifndef SL_BOARD_ENABLE_VCOM_PORT               
+#define SL_BOARD_ENABLE_VCOM_PORT                SL_GPIO_PORT_C
+#endif
+#ifndef SL_BOARD_ENABLE_VCOM_PIN                
+#define SL_BOARD_ENABLE_VCOM_PIN                 1
+#endif
 // [GPIO_SL_BOARD_ENABLE_VCOM]$
 
 // <<< sl:end pin_tool >>>

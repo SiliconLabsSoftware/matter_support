@@ -6,7 +6,6 @@ extern "C" {
 #endif
 
 #include "spidrv.h"
-
 extern SPIDRV_Handle_t sl_spidrv_exp_handle;
 
 void sl_spidrv_init_instances(void);

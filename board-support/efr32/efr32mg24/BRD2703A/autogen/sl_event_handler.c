@@ -3,7 +3,11 @@
 #include "sl_board_init.h"
 #include "sl_clock_manager.h"
 #include "sl_hfxo_manager.h"
-#include "pa_conversions_efr32.h"
+#include "sl_rail_util_compatible_pa.h"
+#if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
+#include "sl_bluetooth.h"
+#include "sl_rail_util_power_manager_init.h"
+#endif // !SLI_SI91X_ENABLE_BLE
 #include "sl_rail_util_power_manager_init.h"
 #include "sl_rail_util_pti.h"
 #include "sl_rail_util_rssi.h"
@@ -19,10 +23,15 @@
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
+
+#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+#include "sl_simple_rgb_pwm_led_instances.h"
+#else
 #include "sl_simple_led_instances.h"
+#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
-#endif
+#endif // CONFIG_ENABLE_UART
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
 #include "sli_protocol_crypto.h"
@@ -30,7 +39,7 @@
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "nvm3_default.h"
-#include "sl_cos.h"
+
 #include "sl_iostream_handles.h"
 
 void sli_driver_permanent_allocation(void)
@@ -77,9 +86,9 @@ void sl_driver_init(void)
   GPIOINT_Init();
   sl_simple_button_init_instances();
   sl_simple_led_init_instances();
-#if defined(CONFIG_ENABLE_UART)
+  #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
-#endif
+#endif // CONFIG_ENABLE_UART
 }
 
 void sl_service_init(void)
@@ -98,18 +107,24 @@ void sl_service_init(void)
 
 void sl_stack_init(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sl_rail_util_pa_init();
   sl_rail_util_power_manager_init();
   sl_rail_util_pti_init();
   sl_rail_util_rssi_init();
-  sl_ot_sys_init();
   sli_bt_stack_functional_init();
+#endif // !SLI_SI91X_ENABLE_BLE
+#ifdef SL_OT_ENABLE
+  sl_ot_sys_init();
+#endif // SL_OT_ENABLE
 }
 
 void sl_internal_app_init(void)
 {
+#ifdef SL_OT_ENABLE
   sl_ot_rtos_stack_init();
   sl_ot_rtos_app_init();
+#endif // SL_OT_ENABLE
 }
 
 void sl_iostream_init_instances_stage_1(void)
@@ -121,4 +136,3 @@ void sl_iostream_init_instances_stage_2(void)
 {
   sl_iostream_set_console_instance();
 }
-

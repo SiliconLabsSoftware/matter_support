@@ -34,31 +34,48 @@
 // <<< sl:start pin_tool >>>
 // <usart signal=TX,CLK> SL_MEMLCD_SPI
 // $[USART_SL_MEMLCD_SPI]
+#ifndef SL_MEMLCD_SPI_PERIPHERAL                
 #define SL_MEMLCD_SPI_PERIPHERAL                 USART0
+#endif
+#ifndef SL_MEMLCD_SPI_PERIPHERAL_NO             
 #define SL_MEMLCD_SPI_PERIPHERAL_NO              0
+#endif
 
 // USART0 TX on PC01
+#ifndef SL_MEMLCD_SPI_TX_PORT                   
 #define SL_MEMLCD_SPI_TX_PORT                    SL_GPIO_PORT_C
+#endif
+#ifndef SL_MEMLCD_SPI_TX_PIN                    
 #define SL_MEMLCD_SPI_TX_PIN                     1
+#endif
 
 // USART0 CLK on PC03
+#ifndef SL_MEMLCD_SPI_CLK_PORT                  
 #define SL_MEMLCD_SPI_CLK_PORT                   SL_GPIO_PORT_C
+#endif
+#ifndef SL_MEMLCD_SPI_CLK_PIN                   
 #define SL_MEMLCD_SPI_CLK_PIN                    3
-
+#endif
 // [USART_SL_MEMLCD_SPI]$
 
 // <gpio> SL_MEMLCD_SPI_CS
 // $[GPIO_SL_MEMLCD_SPI_CS]
+#ifndef SL_MEMLCD_SPI_CS_PORT                   
 #define SL_MEMLCD_SPI_CS_PORT                    SL_GPIO_PORT_C
+#endif
+#ifndef SL_MEMLCD_SPI_CS_PIN                    
 #define SL_MEMLCD_SPI_CS_PIN                     8
-
+#endif
 // [GPIO_SL_MEMLCD_SPI_CS]$
 
 // <gpio optional=true> SL_MEMLCD_EXTCOMIN
 // $[GPIO_SL_MEMLCD_EXTCOMIN]
+#ifndef SL_MEMLCD_EXTCOMIN_PORT                 
 #define SL_MEMLCD_EXTCOMIN_PORT                  SL_GPIO_PORT_C
+#endif
+#ifndef SL_MEMLCD_EXTCOMIN_PIN                  
 #define SL_MEMLCD_EXTCOMIN_PIN                   6
-
+#endif
 // [GPIO_SL_MEMLCD_EXTCOMIN]$
 
 // <<< sl:end pin_tool >>>
