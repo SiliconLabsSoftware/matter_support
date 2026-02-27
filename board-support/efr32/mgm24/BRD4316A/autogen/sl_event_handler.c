@@ -33,9 +33,6 @@
 #if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
 #endif // CONFIG_ENABLE_UART
-#ifdef SL_WIFI
-#include "sl_spidrv_instances.h"
-#endif
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
 #include "sli_protocol_crypto.h"
