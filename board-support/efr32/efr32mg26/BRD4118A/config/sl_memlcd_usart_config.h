@@ -49,6 +49,15 @@
 #define SL_MEMLCD_SPI_TX_PIN                     2
 #endif
 
+// USART0 CLK on PC03
+#ifndef SL_MEMLCD_SPI_CLK_PORT                  
+#define SL_MEMLCD_SPI_CLK_PORT                   SL_GPIO_PORT_C
+#endif
+
+#ifndef SL_MEMLCD_SPI_CLK_PIN                    
+#define SL_MEMLCD_SPI_CLK_PIN                     3
+#endif
+
 // [USART_SL_MEMLCD_SPI]$
 
 // <gpio> SL_MEMLCD_SPI_CS
