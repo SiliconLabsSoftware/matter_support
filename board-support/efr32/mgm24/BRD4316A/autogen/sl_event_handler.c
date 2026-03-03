@@ -20,19 +20,14 @@
 #include "sl_debug_swo.h"
 #include "sl_gpio.h"
 #include "gpiointerrupt.h"
+#if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+#include "sl_i2cspm_instances.h"
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include "sl_iostream_rtt.h"
 #include "sl_mbedtls.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
-
-#if (defined(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-#include "sl_simple_rgb_pwm_led_instances.h"
-#else
-#include "sl_simple_led_instances.h"
-#endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-#if defined(CONFIG_ENABLE_UART)
 #include "sl_uartdrv_instances.h"
-#endif // CONFIG_ENABLE_UART
 #include "psa/crypto.h"
 #include "sl_se_manager.h"
 #include "sli_protocol_crypto.h"
@@ -86,7 +81,7 @@ void sl_driver_init(void)
   sl_gpio_init();
   GPIOINT_Init();
   sl_simple_button_init_instances();
-  #if defined(CONFIG_ENABLE_UART)
+#if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
 #endif // CONFIG_ENABLE_UART
 }
