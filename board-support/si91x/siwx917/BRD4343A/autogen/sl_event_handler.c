@@ -9,6 +9,9 @@
 #include "sl_si91x_power_manager.h"
 #include "sl_si91x_power_manager_init.h"
 #endif // SL_ICD_ENABLED
+#if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+#include "sl_i2c_instances.h"
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include "sl_si91x_button_instances.h"
 #include "sl_si91x_led_instances.h"
 #include "sl_ulp_timer_instances.h"
@@ -54,6 +57,9 @@ void sl_kernel_start(void)
 
 void sl_driver_init(void)
 {
+#if defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
+  sl_i2c_init_instances();
+#endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
   button_init_instances();
   led_init_instances();
 }
