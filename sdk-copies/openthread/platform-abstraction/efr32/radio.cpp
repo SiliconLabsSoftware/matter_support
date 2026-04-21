@@ -2611,12 +2611,12 @@
      return rxPacketBuf;
  }
  
-#if !defined(__clang__)
+ #if OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
  static inline bool isRxPacketBroadcast(void)
  {
      return (sReceive.instance == nullptr);
  }
- #endif // !defined(__clang__)
+ #endif // OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
  
  static void deliverRxPacketToInstance(otInstance *aInstance)
  {
