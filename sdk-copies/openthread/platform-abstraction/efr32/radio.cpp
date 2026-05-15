@@ -42,6 +42,7 @@
  #include "radio_security.h"
  #include "radio_state.h"
  #include <assert.h>
+ #include <cinttypes>
  #include <openthread-core-config.h>
  #include <openthread-system.h>
  #include <openthread/link.h>
@@ -707,7 +708,7 @@
  
              if (status != SL_RAIL_STATUS_NO_ERROR)
              {
-                 otLogWarnPlat("Failed to configure radio events: %lu", status);
+                 otLogWarnPlat("Failed to configure radio events: %" PRIu32, status);
              }
              sCurrentEventConfig = newEventConfig;
          }
@@ -2610,10 +2611,12 @@
      return rxPacketBuf;
  }
  
+ #if OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
  static inline bool isRxPacketBroadcast(void)
  {
      return (sReceive.instance == nullptr);
  }
+ #endif // OPENTHREAD_CONFIG_MULTIPLE_INSTANCE_ENABLE
  
  static void deliverRxPacketToInstance(otInstance *aInstance)
  {

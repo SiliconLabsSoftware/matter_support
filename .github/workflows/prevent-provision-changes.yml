@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Get list of changed files and check for unauthorized changes
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const { data: commits } = await github.rest.pulls.listCommits({
