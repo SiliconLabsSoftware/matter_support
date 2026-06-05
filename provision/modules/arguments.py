@@ -199,7 +199,7 @@ class ArgumentList(ParameterList):
     DEFAULT_OUTPUT_PATH = 'latest.json'
 
     def __init__(self, paths) -> None:
-        super().__init__(paths)
+        super().__init__(paths, None)
         self.formatter = None
 
     def create(self, y):
