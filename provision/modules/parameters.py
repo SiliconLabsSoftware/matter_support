@@ -170,7 +170,7 @@ class ID:
 class Parameter:
     kKnownFlag = 0x1000
 
-    def __init__(self, y) -> None:
+    def __init__(self) -> None:
         self.id = None
         self.desc = None
         self.name = None
@@ -369,7 +369,7 @@ class ParameterList:
         return p
 
     def create(self, y):
-        return Parameter(y)
+        return Parameter()
 
     def get(self, k):
         if k in self.ids:

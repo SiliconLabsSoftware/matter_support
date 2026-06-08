@@ -14,8 +14,8 @@ from modules.parameters import (ID, Actions, Formats, Parameter, ParameterList,
 
 class Argument(Parameter):
 
-    def __init__(self, parent, paths, y) -> None:
-        super().__init__(y)
+    def __init__(self, parent, paths) -> None:
+        super().__init__()
         self.parent = parent
         self.paths = paths
         self.value = None
@@ -203,7 +203,10 @@ class ArgumentList(ParameterList):
         self.formatter = None
 
     def create(self, y):
-        return Argument(self, self.paths, y)
+        id = y['id'] if 'id' in y else None
+        if ID.kManufacturingDate == id:
+            return ManufacturingDateArgument(self, self.paths)
+        return Argument(self, self.paths)
 
     def set(self, k, v, default_value=None, validate=True):
         self.get(k).set(v, default_value, validate)
@@ -324,3 +327,19 @@ class ArgumentList(ParameterList):
     def validate(self):
         for n, a in self.names.items():
             a.validate()
+
+
+class ManufacturingDateArgument(Argument):
+
+    def validate(self, x=None):
+        v = super().validate(x)
+        if isinstance(v, str):
+            ymd = v[:8]
+            if ymd.isnumeric():
+                ymd = int(ymd)
+                year = ymd // 10000
+                month = (ymd % 10000) // 100
+                day = ymd % 100
+                if year > 0 and month in range(1, 13) and day in range(1, 32):
+                    return v
+            _util.fail(f"Invalid \"{self.name}\": {v}")
