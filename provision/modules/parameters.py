@@ -317,7 +317,10 @@ class ParameterList:
 
     PARAMS_FILENAME = 'parameters.yaml'
 
-    def __init__(self, paths, custom_path=None) -> None:
+    def __init__(self, paths, custom_path) -> None:
+        if custom_path and isinstance(custom_path, _util.Paths):
+            # _util.fail("Invalid custom path: {}".format(custom_path))
+            raise ValueError("Invalid custom path: {}".format(custom_path))
         self.paths = paths
         self.names = {}
         self.longs = {}
@@ -325,7 +328,8 @@ class ParameterList:
         self.groups = {}
         self.custom = {}
         # Default parameters
-        self.load(paths.base('modules/' + ParameterList.PARAMS_FILENAME))
+        params_path = self.paths.config(ParameterList.PARAMS_FILENAME)
+        self.load(params_path)
         # Custom parameters
         self.load(custom_path, True)
 
