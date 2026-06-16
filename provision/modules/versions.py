@@ -34,7 +34,7 @@ class Version:
 
 class VersionManager:
 
-    DEFAULT = Version({'version': '2.8', 'module': 'v2_0', 'date': '2025-04-23', 'summary': 'Default'})
+    DEFAULT = Version({'version': '2.9', 'module': 'v2_0', 'date': '2025-04-23', 'summary': 'Default'})
     VERSIONS_FILENAME = 'versions.yaml'
 
     def __init__(self, paths) -> None:
