@@ -27,3 +27,4 @@
 // <<< end of configuration section >>>
 
 #endif // __BUFFER_POOL_ALLOCATOR_CONFIG_H__
+

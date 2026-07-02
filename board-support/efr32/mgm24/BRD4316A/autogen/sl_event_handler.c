@@ -5,7 +5,6 @@
 #include "sl_hfxo_manager.h"
 #include "sl_rail_util_compatible_pa.h"
 #if !(defined(SLI_SI91X_ENABLE_BLE) && SLI_SI91X_ENABLE_BLE)
-#include "sl_bluetooth.h"
 #include "sl_rail_util_power_manager_init.h"
 #endif // !SLI_SI91X_ENABLE_BLE
 #include "sl_rail_util_power_manager_init.h"
@@ -15,6 +14,7 @@
 #include "sl_fem_util.h"
 #include "sl_board_control.h"
 #include "platform-efr32.h"
+#include "sl_dma_manager_instances.h"
 #include "sl_bt_rtos_adaptation.h"
 #include "sl_bluetooth.h"
 #include "sl_debug_swo.h"
@@ -63,6 +63,7 @@ void sl_platform_init(void)
   sl_hfxo_manager_init_hardware();
   sl_board_init();
   bootloader_init();
+  sl_dma_manager_instances_init();
   nvm3_initDefault();
 }
 

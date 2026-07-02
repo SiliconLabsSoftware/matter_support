@@ -46,3 +46,4 @@
 // </h>
 // <<< end of configuration section >>>
 #endif // SL_RAIL_UTIL_RSSI_CONFIG_H
+
