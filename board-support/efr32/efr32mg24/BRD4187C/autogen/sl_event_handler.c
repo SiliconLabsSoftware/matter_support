@@ -14,6 +14,7 @@
 #include "btl_interface.h"
 #include "sl_board_control.h"
 #include "platform-efr32.h"
+#include "sl_dma_manager_instances.h"
 #include "sl_bt_rtos_adaptation.h"
 #include "sl_bluetooth.h"
 #include "sl_debug_swo.h"
@@ -77,6 +78,7 @@ void sl_platform_init(void)
   sl_hfxo_manager_init_hardware();
   sl_board_init();
   bootloader_init();
+  sl_dma_manager_instances_init();
   nvm3_initDefault();
 }
 
@@ -105,7 +107,7 @@ void sl_driver_init(void)
 #else
   sl_simple_led_init_instances();
 #endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
-  #if defined(CONFIG_ENABLE_UART)
+#if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
 #endif // CONFIG_ENABLE_UART
 }

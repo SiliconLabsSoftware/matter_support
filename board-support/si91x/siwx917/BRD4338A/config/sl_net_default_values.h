@@ -85,6 +85,7 @@
 #define DEFAULT_WIFI_GATEWAY_ADDRESS 0x0A0AA8C0
 #endif
 
+//For open security networks (SL_WIFI_OPEN), use SL_WIFI_NO_CREDENTIAL_ID.
 #define DEFAULT_WIFI_CLIENT_PROFILE \
   (sl_net_wifi_client_profile_t)    \
   {                                 \
@@ -100,16 +101,39 @@
         .security = DEFAULT_WIFI_CLIENT_SECURITY_TYPE, \
         .encryption = DEFAULT_WIFI_CLIENT_ENCRYPTION_TYPE, \
         .client_options = 0, \
-        .credential_id = SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, \
+        .credential_id = (DEFAULT_WIFI_CLIENT_SECURITY_TYPE == SL_WIFI_OPEN) ? \
+                         SL_WIFI_NO_CREDENTIAL_ID : \
+                         SL_NET_DEFAULT_WIFI_CLIENT_CREDENTIAL_ID, \
     }, \
     .ip = { \
         .mode = SL_IP_MANAGEMENT_DHCP, \
         .type = REQUIRED_IP_TYPE, \
         .host_name = NULL, \
-        .ip = {{{0}}}, \
-    }                  \
+        .ip = { \
+            .v4 = { \
+                .ip_address = { .value = 0u }, \
+                .gateway = { .value = 0u }, \
+                .netmask = { .value = 0u }, \
+            }, \
+            .v6 = { \
+                .link_local_address = { .value = { 0u, 0u, 0u, 0u } }, \
+                .global_address = { .value = { 0u, 0u, 0u, 0u } }, \
+                .gateway = { .value = { 0u, 0u, 0u, 0u } }, \
+            }, \
+        }, \
+        .dhcp_config = { \
+            .min_discover_retry_interval = 0, \
+            .max_discover_retry_interval = 0, \
+            .min_request_retry_interval = 0, \
+            .max_request_retry_interval = 0, \
+            .max_discover_retries = 0, \
+            .max_request_retries = 0, \
+        }, \
+    }, \
+    .priority = 0                  \
   }
 
+//For open security networks (SL_WIFI_OPEN), use SL_WIFI_NO_CREDENTIAL_ID.
 #define DEFAULT_WIFI_ACCESS_POINT_PROFILE \
   (sl_net_wifi_ap_profile_t)              \
   {                                       \
@@ -124,7 +148,7 @@
         .rate_protocol = SL_WIFI_RATE_PROTOCOL_AUTO, \
         .options = 0, \
         .credential_id = SL_NET_DEFAULT_WIFI_AP_CREDENTIAL_ID, \
-        .keepalive_type = SL_SI91X_AP_NULL_BASED_KEEP_ALIVE, \
+        .keepalive_type = SL_WIFI_AP_NULL_BASED_KEEP_ALIVE, \
         .beacon_interval = 100, \
         .client_idle_timeout = 0xFF, \
         .dtim_beacon_count = 3, \
@@ -138,9 +162,24 @@
       .type      = SL_IPV4, \
       .host_name = NULL, \
       .ip        = { \
-         .v4.ip_address.value = DEFAULT_WIFI_MODULE_IP_ADDRESS, \
-         .v4.gateway.value    = DEFAULT_WIFI_GATEWAY_ADDRESS, \
-         .v4.netmask.value    = DEFAULT_WIFI_SN_MASK_ADDRESS \
+         .v4 = { \
+           .ip_address.value = DEFAULT_WIFI_MODULE_IP_ADDRESS, \
+           .gateway.value    = DEFAULT_WIFI_GATEWAY_ADDRESS, \
+           .netmask.value    = DEFAULT_WIFI_SN_MASK_ADDRESS, \
+         }, \
+         .v6 = { \
+           .link_local_address = { .value = { 0u, 0u, 0u, 0u } }, \
+           .global_address     = { .value = { 0u, 0u, 0u, 0u } }, \
+           .gateway            = { .value = { 0u, 0u, 0u, 0u } }, \
+         }, \
+      }, \
+      .dhcp_config = { \
+        .min_discover_retry_interval = 0, \
+        .max_discover_retry_interval = 0, \
+        .min_request_retry_interval = 0, \
+        .max_request_retry_interval = 0, \
+        .max_discover_retries = 0, \
+        .max_request_retries = 0, \
       }, \
     }                        \
   }
@@ -159,3 +198,4 @@ static sl_net_wifi_psk_credential_entry_t default_wifi_ap_credential = { .type =
 // Restore GCC diagnostics
 #pragma GCC diagnostic pop
 #endif
+
