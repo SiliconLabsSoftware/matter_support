@@ -25,7 +25,6 @@ class JLinkChannel(_base.Channel):
             self.link = pylink.JLink()
         else:
             self.link = pylink.JLink(lib=pylink.library.Library(dllpath=lib_path))
-        self.link.disable_dialog_boxes()
         self.support_dir = paths.support()
 
     def open(self):
@@ -39,6 +38,7 @@ class JLinkChannel(_base.Channel):
         else:
             print("* Open DEFAULT connection to {}\n".format(self.part_number))
             self.link.open()
+        self.link.disable_dialog_boxes()
 
         self.link.set_tif(interface=pylink.JLinkInterfaces.SWD)
         self.link.connect(chip_name=self.part_number, speed="auto", verbose=True)
