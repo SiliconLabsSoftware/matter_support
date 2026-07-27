@@ -1,3 +1,4 @@
+
 /*
  *  Copyright (c) 2025, The OpenThread Authors.
  *  All rights reserved.
@@ -286,7 +287,7 @@
  
  #if (OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2)
  
- #if OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE
+ #if (OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE || OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_LISTENER_ENABLE)
  static uint8_t sAckIeData[OT_ACK_IE_MAX_SIZE + SLI_OT_RADIO_DIRECT_ENH_ACK_IE_MAX_SIZE];
  #else
  static uint8_t sAckIeData[OT_ACK_IE_MAX_SIZE];
@@ -319,15 +320,15 @@
      }
  #endif
  
- #if OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE
-     {
-         uint8_t available = (uint8_t)(sizeof(sAckIeData) - offset);
- 
-         offset +=
-             sli_ot_radio_direct_generate_enh_ack_ie_data(aInstance, aReceivedFrame, sAckIeData + offset, available);
-     }
+ #if (OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE || OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_LISTENER_ENABLE)
+    {
+        uint8_t available = (uint8_t)(sizeof(sAckIeData) - offset);
+
+        offset +=
+            sli_ot_radio_direct_generate_enh_ack_ie_data(aInstance, aReceivedFrame, sAckIeData + offset, available);
+    }
  #endif
- 
+
  exit:
      return offset;
  }
@@ -647,7 +648,7 @@
  {
      setInternalFlag(FLAG_SCHEDULED_RX_PENDING | EVENT_SCHEDULED_RX_STARTED, false);
  }
- 
+
  SL_CODE_CLASSIFY(SL_CODE_COMPONENT_OT_PLATFORM_ABSTRACTION, SL_CODE_CLASS_TIME_CRITICAL)
  bool sli_ot_radio_state_is_receiving_frame(void)
  {
@@ -740,7 +741,7 @@
  
              if (status != SL_RAIL_STATUS_NO_ERROR)
              {
-                 otLogWarnPlat("Failed to configure radio events: %lu", static_cast<unsigned long>(status));
+                 otLogWarnPlat("Failed to configure radio events: %" PRIu32, status);
              }
              sCurrentEventConfig = newEventConfig;
          }
@@ -1240,8 +1241,7 @@
  
      sli_init_power_manager();
  
-     sl_rail_handle_t handle = sli_ot_radio_interface_rail_init(commonConfig);
-     OT_ASSERT(handle != nullptr);
+     OT_ASSERT(sli_ot_radio_interface_rail_init(commonConfig) != nullptr);
  
      sli_ot_radio_events_update_config(SL_RAIL_EVENTS_ALL,
                                        (0 | SL_RAIL_EVENT_RX_ACK_TIMEOUT | SL_RAIL_EVENT_RX_PACKET_RECEIVED
@@ -1483,7 +1483,7 @@
          sli_ot_radio_interface_rail_idle();
          sli_ot_radio_state_clear_scheduled_rx_events();
      }
- 
+
      txPower = sl_get_tx_power_for_current_channel(aInstance);
      error   = sli_ot_radio_interface_load_channel_config(aChannel, txPower);
      otEXPECT(error == OT_ERROR_NONE);
@@ -1584,7 +1584,6 @@
              setRadioTxToIdleOrRxTransition(true);
          }
  #endif
- 
          OT_ASSERT(!sli_ot_radio_state_is_tx_data_ongoing());
  
          sli_ot_radio_state_clear_all_tx_events();
@@ -1595,7 +1594,7 @@
  
  #if OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2
          sli_ot_radio_csl_set_present(aInstance, aFrame->mInfo.mTxInfo.mCslPresent);
- 
+
          // ToDo: Simplify following ifdefs.
  #if OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE \
      || (OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE || OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_LISTENER_ENABLE)
@@ -1609,14 +1608,15 @@
                  ||
  #endif
  #if (OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE || OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_LISTENER_ENABLE)
-                 (otMacFrameIsTdLinkCommand(&sCurrentTxPacket->frame) && sli_ot_radio_direct_slw_is_present(aInstance))
+                 (otMacFrameHasThreadDirectScaLtv(&sCurrentTxPacket->frame)
+                  && sli_ot_radio_direct_slw_is_present(aInstance))
  #endif
                      ))
          {
-             // Only called for CSL children (CSL period > 0)
-             // Note: Our SSEDs "schedule" transmissions to their parent in order to know
-             // exactly when in the future the data packets go out so they can calculate
-             // the accurate CSL phase to send to their parent.
+             // Only called for CSL children (CSL period > 0) or Thread Direct frames carrying
+             // an SCA LTV. Note: Our SSEDs "schedule" transmissions to their parent in order to
+             // know exactly when in the future the data packets go out so they can calculate
+             // the accurate CSL or SCA phase to send to their peer.
              sCurrentTxPacket->frame.mInfo.mTxInfo.mTxDelayBaseTime = sl_rail_get_time(SL_RAIL_EFR32_HANDLE);
              sCurrentTxPacket->frame.mInfo.mTxInfo.mTxDelay =
                  SCHEDULE_TX_DELAY_US; // Chosen after internal certification testing
@@ -1709,7 +1709,7 @@
  #endif // OPENTHREAD_CONFIG_MAC_CSL_RECEIVER_ENABLE
  
  #if (OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_INITIATOR_ENABLE || OPENTHREAD_CONFIG_THREAD_DIRECT_WAKE_LISTENER_ENABLE)
-     if (otMacFrameIsTdLinkCommand(&sCurrentTxPacket->frame) && sli_ot_radio_direct_slw_is_present(instance))
+     if (otMacFrameHasThreadDirectScaLtv(&sCurrentTxPacket->frame) && sli_ot_radio_direct_slw_is_present(instance))
      {
          uint16_t slwPhase;
          int16_t  ramOffsetUs;
@@ -1970,7 +1970,7 @@
      otEXPECT_ACTION(sl_ot_rtos_task_can_access_pal(), error = OT_ERROR_REJECTED);
  
      shouldDefer = sli_ot_radio_instance_energy_scan_should_defer();
-     otEXPECT_ACTION(!shouldDefer, error = OT_ERROR_BUSY);
+     otEXPECT_ACTION(!shouldDefer, sli_ot_radio_instance_energy_scan_defer(aInstance, aScanChannel, aScanDuration));
  
      error = sli_ot_energy_scan_status_to_ot_error(
          sli_ot_energy_scan_async(aInstance, aScanChannel, (sl_rail_time_t)aScanDuration * US_IN_MS));
@@ -2003,7 +2003,7 @@
  {
      sli_ot_radio_security_set_mac_frame_counter_if_larger(aInstance, aMacFrameCounter);
  }
- 
+
  // Thread Direct platform APIs (otPlatRadioSetWakeKey + platform/thread_direct.h stubs)
  // are implemented in radio_direct.cpp.
  #endif // (OPENTHREAD_CONFIG_THREAD_VERSION >= OT_THREAD_VERSION_1_2)
@@ -2148,8 +2148,6 @@
  
      sAckIeDataLength = generateAckIeData(instance, dataPtr, linkMetricsDataLen, &receivedFrame);
  
-     // Set the radioType to 0 to let mac know that this frame is intended for a 802.15.4 radio
-     enhAckFrame.mRadioType = 0;
      otEXPECT(otMacFrameGenerateEnhAck(&receivedFrame, setFramePending, sAckIeData, sAckIeDataLength, &enhAckFrame)
               == OT_ERROR_NONE);
  
