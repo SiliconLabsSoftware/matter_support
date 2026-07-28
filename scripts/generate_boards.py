@@ -28,6 +28,7 @@ class Boards(str, Enum):
     BRD4317A = "BRD4317A"
     BRD4318A = "BRD4318A"
     BRD4319A = "BRD4319A"
+    BRD4407A = "BRD4407A"
     ALL = "ALL"
 
     @classmethod
@@ -44,6 +45,7 @@ class Family(str, Enum):
     MG26 = "efr32mg26"
     MG24 = "efr32mg24"
     MGM24 = "mgm24"
+    SIMG301 = "simg301"
 
 
 class BoardDict(dict):
@@ -102,6 +104,8 @@ _boards[Boards.BRD4118A] = Board(board=Boards.BRD4118A, family=Family.MG26,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4118a")
 _boards[Boards.BRD2608A] = Board(board=Boards.BRD2608A, family=Family.MG26,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,i2cspm:sensor,brd2608a")
+_boards[Boards.BRD4407A] = Board(board=Boards.BRD4407A, family=Family.SIMG301,
+                                 slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,memlcd_eusart,dmd_memlcd,i2cspm:sensor,brd4407a")
 
 
 def _parse_args():
