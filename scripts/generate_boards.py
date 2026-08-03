@@ -2,22 +2,19 @@
 
 """generate_boards.py: Script generate slc files for all boards """
 
-import sys
 import argparse
-import subprocess
-from enum import Enum
-from dataclasses import dataclass
-from pathlib import Path
 import os
 import shutil
+import subprocess
+import sys
+from dataclasses import dataclass
+from enum import Enum
+from pathlib import Path
 
 
 class Boards(str, Enum):
-    BRD4186A = "BRD4186A"
     BRD4186C = "BRD4186C"
-    BRD4187A = "BRD4187A"
     BRD4187C = "BRD4187C"
-    BRD2601B = "BRD2601B"
     BRD2703A = "BRD2703A"
     BRD2608A = "BRD2608A"
     BRD4116A = "BRD4116A"
@@ -74,16 +71,10 @@ class InvalidInput(Exception):
 
 # Configuring slc arguments per board
 _boards = BoardDict()
-_boards[Boards.BRD4186A] = Board(board=Boards.BRD4186A, family=Family.MG24,
-                                 slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4186a")
 _boards[Boards.BRD4186C] = Board(board=Boards.BRD4186C, family=Family.MG24,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4186a")
-_boards[Boards.BRD4187A] = Board(board=Boards.BRD4187A, family=Family.MG24,
-                                 slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4186c")
 _boards[Boards.BRD4187C] = Board(board=Boards.BRD4187C, family=Family.MG24,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4187c")
-_boards[Boards.BRD2601B] = Board(board=Boards.BRD2601B, family=Family.MG24,
-                                 slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,i2cspm:sensor,brd2601b")
 _boards[Boards.BRD2703A] = Board(board=Boards.BRD2703A, family=Family.MG24,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,brd2703a")
 _boards[Boards.BRD2704A] = Board(board=Boards.BRD2704A, family=Family.MGM24,
