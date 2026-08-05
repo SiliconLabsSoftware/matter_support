@@ -58,8 +58,13 @@ void sli_service_permanent_allocation(void)
 
 void sli_stack_permanent_allocation(void)
 {
+#if !SLI_SI91X_ENABLE_BLE
   sli_bt_stack_permanent_allocation();
+#endif // !SLI_SI91X_ENABLE_BLE
+#ifdef SL_OT_ENABLE
   sl_ot_rtos_perm_allocation();
+#endif // SL_OT_ENABLE
+
 }
 
 void sli_internal_permanent_allocation(void)
@@ -102,6 +107,9 @@ void sl_driver_init(void)
 #else
   sl_simple_led_init_instances();
 #endif //(SL_MATTER_RGB_LED_ENABLED) && SL_MATTER_RGB_LED_ENABLED == 1)
+#ifdef SL_WIFI
+  sl_spidrv_init_instances();
+#endif //SL_WIFI
   #if defined(CONFIG_ENABLE_UART)
   sl_uartdrv_init_instances();
 #endif // CONFIG_ENABLE_UART
