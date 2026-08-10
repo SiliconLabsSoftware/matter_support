@@ -23,6 +23,7 @@ class Boards(str, Enum):
     BRD4116A = "BRD4116A"
     BRD4117A = "BRD4117A"
     BRD4118A = "BRD4118A"
+    BRD4120A = "BRD4120A"
     BRD2704A = "BRD2704A"
     BRD4316A = "BRD4316A"
     BRD4317A = "BRD4317A"
@@ -99,6 +100,8 @@ _boards[Boards.BRD4116A] = Board(board=Boards.BRD4116A, family=Family.MG26,
 _boards[Boards.BRD4117A] = Board(board=Boards.BRD4117A, family=Family.MG26,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4117a")
 _boards[Boards.BRD4118A] = Board(board=Boards.BRD4118A, family=Family.MG26,
+                                 slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4118a")
+_boards[Boards.BRD4120A] = Board(board=Boards.BRD4120A, family=Family.MG26,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,memlcd_usart,dmd_memlcd,i2cspm:sensor,brd4118a")
 _boards[Boards.BRD2608A] = Board(board=Boards.BRD2608A, family=Family.MG26,
                                  slc_arguments="simple_led:led0:led1,simple_button:btn0:btn1,uartdrv_eusart:vcom,mx25_flash_shutdown_usart,i2cspm:sensor,brd2608a")
