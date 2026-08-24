@@ -18,9 +18,11 @@
 #pragma once
 
 #include <lib/core/CHIPError.h>
+#include <lib/support/CodeUtils.h>
 #include <lib/support/Span.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <stdio.h>
 
 namespace chip {
 namespace DeviceLayer {
@@ -29,14 +31,33 @@ namespace Provision {
 
 static constexpr uint32_t kCreds_KeyId_Default = 2; //(PSA_KEY_ID_USER_MIN + 1);
 
-// Size of the buffer holding the CSR subject name:
-//   "CN=<cn>, 1.3.6.1.4.1.37244.2.1=VVVV, 1.3.6.1.4.1.37244.2.2=PPPP\0"
-//   - <cn>:       X.509 ub-common-name limit of 64 chars (RFC 5280, Appendix A.1)
-//   - VVVV/PPPP:  Matter VID/PID OID values, 4 uppercase-hex chars each
-//   - literals:   "CN=", ", " separators and the two OID prefixes = 59 chars
-//   - NUL:        1 char
-// Worst case: 64 + 59 + 1 = 124, rounded up to 128.
-static constexpr size_t kSubjectNameLengthMax = 128;
+// Size of the buffer holding the CSR subject name. Worst case is the Zephyr
+// form, which embeds VID/PID as hex-DER UTF8String values:
+//   "CN=<cn>, 1.3.6.1.4.1.37244.2.1=#0C04XXXXXXXX, 1.3.6.1.4.1.37244.2.2=#0C04XXXXXXXX\0"
+//
+//  "CN="   3 chars
+//  <cn>    64 chars (variable length)
+//  ", 1.3.6.1.4.1.37244.2.1=#0C04XXXXXXXX"   37 chars
+//  ", 1.3.6.1.4.1.37244.2.2=#0C04XXXXXXXX"   37 chars
+//  "\0"    1 char
+
+// Worst case: 3 + 64 + 37 + 37 + 1 = 142, rounded up to 160.
+static constexpr size_t kSubjectNameLengthMax = 160;
+
+// Encode a Matter VID/PID as a hex-DER attribute value.
+// "#0C04" + 8 hex digits: ASN.1 UTF8String (0x0C), length 4, then the ASCII
+// of "%04X" (e.g. FFF1 -> #0C0446464631).
+inline CHIP_ERROR FormatMatterOidUtf8DerHex(char * dest, size_t destSize, uint16_t value)
+{
+    VerifyOrReturnError(dest != nullptr, CHIP_ERROR_INVALID_ARGUMENT);
+    char hex[5];
+    snprintf(hex, sizeof(hex), "%04X", value);
+
+    int written =
+        snprintf(dest, destSize, "#0C04%02X%02X%02X%02X", static_cast<unsigned char>(hex[0]), static_cast<unsigned char>(hex[1]),
+                 static_cast<unsigned char>(hex[2]), static_cast<unsigned char>(hex[3]));
+    return (written == 13) ? CHIP_NO_ERROR : CHIP_ERROR_INTERNAL;
+}
 
 class AttestationKey
 {
