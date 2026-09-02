@@ -1,7 +1,6 @@
 import os
 
 import modules.util as _util
-import yaml
 from modules.parameters import ID
 
 
@@ -16,6 +15,7 @@ class Device:
         self.stack_size = None
         self.rtt_addr = args.get(ID.kRttAddr)
         self.gen_fw = args.get(ID.kGeneratorFW)
+        self.args = args
         self.override = False  # Override commander's part_num with devices.yaml label
         self.load(paths, part_num, args.str(ID.kVersion))
 
@@ -46,12 +46,21 @@ class Device:
         self.flash_addr = self._int(info, 'flash_addr')
         self.flash_size = self._int(info, 'flash_size', None)
         self.stack_size = self._int(info, 'stack_size')
+        family_rtt_addr = self._int(info, 'rtt_addr', None)
+
+        rtos = self.args.str(ID.kRtos)
+        rtos = rtos.strip() if rtos else None
+        if rtos:
+            section = info.get(rtos)
+            if isinstance(section, dict):
+                self._apply_section(section)
+                family_rtt_addr = self._int(section, 'rtt_addr', family_rtt_addr)
 
         # Search for a firmware for the given version, if needed
         if (self.gen_fw.value is None) or os.path.isdir(self.gen_fw.value):
             image = None
             image_dir = (self.gen_fw.value is not None) and self.gen_fw.value or 'images'
-            rtt_addr = None
+            rtt_addr = family_rtt_addr
             version_len = len(version)
             for y in self._list(info, 'firmware'):
                 v = self._str(y, 'version')
@@ -59,10 +68,12 @@ class Device:
                 if prefix > version:
                     break
                 if version == prefix:
-                    image = self._str(y, 'file')
-                    rtt_addr = self._int(y, 'rtt_addr', None)
+                    image = self._firmware_file(y, rtos)
+                    rtt_addr = self._int(y, 'rtt_addr', family_rtt_addr)
+                    break
             if image is None:
-                _util.fail("Missing firmware for \"{}\" in version \"{}\"".format(part_num, version))
+                kind = rtos or 'default'
+                _util.fail("Missing \"{}\" firmware for \"{}\" in version \"{}\"".format(kind, part_num, version))
             firmware = paths.base(f"{image_dir}/{image}")
             self.gen_fw.set(firmware)
             if self.rtt_addr.value is None:
@@ -70,7 +81,10 @@ class Device:
         elif not os.path.isfile(self.gen_fw.value):
             _util.fail("Invalid firmware path \"{}\"".format(self.gen_fw.value))
         elif self.rtt_addr.value is None:
-            _util.warn("Missing RTT address")
+            if family_rtt_addr is not None:
+                self.rtt_addr.set(family_rtt_addr)
+            else:
+                _util.warn("Missing RTT address")
 
     def match(self, pn, id, y):
         if pn.startswith(id.lower()):
@@ -79,6 +93,21 @@ class Device:
             if pn.startswith(a.lower()):
                 return True
         return False
+
+    def _apply_section(self, section):
+        if 'ram_addr' in section:
+            self.ram_addr = self._int(section, 'ram_addr')
+        if 'flash_addr' in section:
+            self.flash_addr = self._int(section, 'flash_addr')
+        if 'flash_size' in section:
+            self.flash_size = self._int(section, 'flash_size', None)
+        if 'stack_size' in section:
+            self.stack_size = self._int(section, 'stack_size')
+
+    def _firmware_file(self, entry, rtos):
+        if rtos:
+            return self._str(entry, rtos) or None
+        return self._str(entry, 'default') or self._str(entry, 'file') or None
 
     def _int(self, conf, tag, default_=0):
         return tag in conf and int(conf[tag]) or default_
