@@ -18,7 +18,7 @@
 #include "sl_i2cspm_instances.h"
 #endif // defined(SL_MATTER_USE_SI70XX_SENSOR) && SL_MATTER_USE_SI70XX_SENSOR
 #include "sl_iostream_rtt.h"
-#include "sl_mbedtls.h"
+#include "sl_psa_crypto.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
 #include "sl_simple_led_instances.h"
@@ -92,9 +92,9 @@ void sl_driver_init(void)
 void sl_service_init(void)
 {
   sl_board_configure_vcom();
-  sl_mbedtls_init();
-  psa_crypto_init();
   sl_se_init();
+  sl_psa_crypto_init();
+  psa_crypto_init();
   sli_sxsymcrypt_init_locks();
   sli_crypto_init();
   sli_ksu_init();
