@@ -34,7 +34,7 @@ efr32mg24:
           file: "efr32mg24_csr_oids.s37"
         - version: "2.9"
           default: "efr32mg24_mfd.s37"
-          zephyr: "zephyr.hex"
+          zephyr: "zephyr_xg24.hex"
 
 efr32mg26:
     zephyr:
@@ -66,7 +66,7 @@ efr32mg26:
           file: "efr32mg26_csr_oids.s37"
         - version: "2.9"
           default: "efr32mg26_mfd.s37"
-          zephyr: "zephyr.hex"
+          zephyr: "zephyr_xg26.hex"
 
 mgm24:
     zephyr:
@@ -104,7 +104,7 @@ mgm24:
           file: "efr32mg24_csr_oids.s37"
         - version: "2.9"
           default: "efr32mg24_mfd.s37"
-          zephyr: "zephyr.hex"
+          zephyr: "zephyr_xg24.hex"
 
 mgm26:
     zephyr:
@@ -136,7 +136,7 @@ mgm26:
           file: "efr32mg26_csr_oids.s37"
         - version: "2.9"
           default: "efr32mg26_mfd.s37"
-          zephyr: "zephyr.hex"
+          zephyr: "zephyr_xg26.hex"
 
 si917y:
     alias: [siwg917y]
