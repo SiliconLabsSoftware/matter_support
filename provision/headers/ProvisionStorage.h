@@ -228,6 +228,18 @@ public:
     CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature) override;
     CHIP_ERROR GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr);
 
+    // PQC-era virtuals. Silabs storage only holds legacy Matter ECDSA credentials; these overrides
+    // exist so this class's vtable is emitted from app-compiled sources compiled against the
+    // current header, avoiding an ABI mismatch with legacy prebuilt archives.
+    CHIP_ERROR GetDeviceAttestationCertForProfile(chip::Credentials::DeviceAttestationCertProfile profile,
+                                                  MutableByteSpan & out_dac_buffer) override;
+    CHIP_ERROR GetProductAttestationIntermediateCertForProfile(chip::Credentials::DeviceAttestationCertProfile profile,
+                                                               MutableByteSpan & out_pai_buffer) override;
+    chip::Credentials::DeviceAttestationProfileSupport GetDeviceAttestationProfileSupport() const override;
+    CHIP_ERROR GetDeviceAttestationDocumentSegment(chip::Credentials::DeviceAttestationDocumentType documentType,
+                                                   chip::Credentials::DeviceAttestationCertProfile profile, size_t offset,
+                                                   MutableByteSpan & out_document_buffer, size_t & out_document_size) override;
+
     CHIP_ERROR SetCertificationDeclaration(const ByteSpan & value);
     CHIP_ERROR SetProductAttestationIntermediateCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationCert(const ByteSpan & value);
