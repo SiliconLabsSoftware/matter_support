@@ -228,6 +228,17 @@ public:
     CHIP_ERROR SignWithDeviceAttestationKey(const ByteSpan & message, MutableByteSpan & signature) override;
     CHIP_ERROR GetDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & cn, MutableCharSpan & csr);
 
+    // PQC
+    CHIP_ERROR GetDeviceAttestationCertForProfile(chip::Credentials::DeviceAttestationCertProfile profile,
+                                                  MutableByteSpan & out_dac_buffer) override;
+    CHIP_ERROR GetProductAttestationIntermediateCertForProfile(chip::Credentials::DeviceAttestationCertProfile profile,
+                                                               MutableByteSpan & out_pai_buffer) override;
+    chip::Credentials::DeviceAttestationProfileSupport GetDeviceAttestationProfileSupport() const override;
+    chip::Credentials::DeviceAttestationCertProfile GetPreferredDeviceAttestationChainProfile() const override;
+    CHIP_ERROR GetDeviceAttestationDocumentSegment(chip::Credentials::DeviceAttestationDocumentType documentType,
+                                                   chip::Credentials::DeviceAttestationCertProfile profile, size_t offset,
+                                                   MutableByteSpan & out_document_buffer, size_t & out_document_size) override;
+
     CHIP_ERROR SetCertificationDeclaration(const ByteSpan & value);
     CHIP_ERROR SetProductAttestationIntermediateCert(const ByteSpan & value);
     CHIP_ERROR SetDeviceAttestationCert(const ByteSpan & value);
