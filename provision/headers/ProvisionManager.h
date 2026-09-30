@@ -16,9 +16,10 @@
  */
 #pragma once
 
-#include <headers/ProvisionChannel.h>
+#include <headers/ProvisionCrypto.h>
 #include <headers/ProvisionProtocol.h>
 #include <headers/ProvisionStorage.h>
+#include <headers/ProvisionTransport.h>
 #include <lib/core/CHIPError.h>
 
 namespace chip {
@@ -29,7 +30,17 @@ namespace Provision {
 class Manager
 {
 public:
-    CHIP_ERROR Init();
+    using ResetHandler = void (*)();
+
+    CHIP_ERROR Init(bool provisionByDefault = false);
+    void ConfigureStorage(IProvisionStorageReader & reader, IProvisionStorageWriter * writer = nullptr)
+    {
+        mStore.ConfigureStorage(reader, writer);
+    }
+    void ConfigureCrypto(IProvisionCrypto & crypto) { mStore.ConfigureCrypto(crypto); }
+    void ConfigureTransport(IProvisionTransport & transport) { mTransport = &transport; }
+    void ConfigureResetHandler(ResetHandler handler) { mResetHandler = handler; }
+    CHIP_ERROR OnTransportDataAvailable();
     bool Step();
     bool IsProvisionRequired();
     CHIP_ERROR SetProvisionRequired(bool required);
@@ -40,7 +51,8 @@ private:
     bool ProcessCommand(ByteSpan & request, MutableByteSpan & response);
 
     Storage mStore;
-    Channel mChannel;
+    IProvisionTransport * mTransport = nullptr;
+    ResetHandler mResetHandler       = nullptr;
 #if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
     Protocol1 mProtocol1;
 #endif
