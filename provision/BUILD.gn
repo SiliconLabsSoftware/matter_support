@@ -17,14 +17,14 @@ config("provision-config") {
 }
 source_set("headers") {
   sources = [
-    "headers/ProvisionCrypto.h",
+    "headers/ProvisionChannelInterface.h",
+    "headers/ProvisionCryptoInterface.h",
     "headers/ProvisionEncoder.h",
     "headers/ProvisionManager.h",
     "headers/ProvisionProtocol.h",
     "headers/ProvisionStorage.h",
     "headers/ProvisionStorageGeneric.h",
     "headers/ProvisionStorageInterfaces.h",
-    "headers/ProvisionTransport.h",
   ]
   public_configs = [ ":provision-config" ]
 }
