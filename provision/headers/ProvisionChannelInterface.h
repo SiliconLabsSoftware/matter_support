@@ -13,10 +13,10 @@ namespace DeviceLayer {
 namespace Silabs {
 namespace Provision {
 
-/** Optional byte transport used by the proprietary provisioning protocol. */
-struct IProvisionTransport
+/** Optional byte channel used by the proprietary provisioning protocol. */
+struct IProvisionChannel
 {
-    virtual ~IProvisionTransport() = default;
+    virtual ~IProvisionChannel() = default;
 
     virtual CHIP_ERROR Init()                                                          = 0;
     virtual CHIP_ERROR Read(uint8_t * buffer, size_t bufferLength, size_t & bytesRead) = 0;

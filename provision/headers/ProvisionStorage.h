@@ -16,7 +16,7 @@
  */
 #pragma once
 
-#include <headers/ProvisionCrypto.h>
+#include <headers/ProvisionCryptoInterface.h>
 #include <headers/ProvisionStorageGeneric.h>
 #include <headers/ProvisionStorageInterfaces.h>
 
@@ -149,8 +149,8 @@ public:
 
     Storage();
     explicit Storage(IProvisionStorageReader & reader, IProvisionStorageWriter * writer = nullptr);
-    void ConfigureStorage(IProvisionStorageReader & reader, IProvisionStorageWriter * writer = nullptr);
-    void ConfigureCrypto(IProvisionCrypto & crypto) { mCrypto = &crypto; }
+    void SetStorageBackend(IProvisionStorageReader & reader, IProvisionStorageWriter * writer = nullptr);
+    void SetCryptoProvider(IProvisionCrypto & crypto) { mCrypto = &crypto; }
     bool IsWritable() const { return mWriter != nullptr; }
 
     //
