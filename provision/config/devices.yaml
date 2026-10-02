@@ -139,6 +139,10 @@ mgm26:
           zephyr: "zephyr_xg26.hex"
 
 si917y:
+    zephyr:
+        flash_addr: 0x003e1000
+        flash_size: 32768
+        rtt_addr: 0xc50
     alias: [siwg917y]
     override: true
     ram_addr: 0x400
@@ -160,9 +164,14 @@ si917y:
         - version: "2.8"
           file: "si917y_csr_oids.rps"
         - version: "2.9"
-          file: "si917y_mfd.rps"
+          default: "si917y_mfd.rps"
+          zephyr: "zephyr_siwx917.rps"
 
 si917:
+    zephyr:
+        flash_addr: 0x003e1000
+        flash_size: 32768
+        rtt_addr: 0xc50
     alias: [siwg917]
     override: true
     ram_addr: 0x400
@@ -190,7 +199,8 @@ si917:
         - version: "2.8"
           file: "si917_csr_oids.rps"
         - version: "2.9"
-          file: "si917_mfd.rps"
+          default: "si917_mfd.rps"
+          zephyr: "zephyr_siwx917.rps"
 
 # l implies 4mb part.
 simg301l:
