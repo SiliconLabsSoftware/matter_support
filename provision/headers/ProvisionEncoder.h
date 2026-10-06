@@ -15,7 +15,6 @@
  *    limitations under the License.
  */
 #pragma once
-
 #include <lib/core/CHIPEncoding.h>
 #include <lib/core/CHIPError.h>
 #include <stddef.h>
@@ -33,19 +32,21 @@ namespace Encoding {
     The "out" pointer marks the next address to be read.
     When "out" reaches "in", all incoming data has been read.
     "Size" is the total amount of bytes written, including the part already
-read. "Left" is the number of bytes available for reading. "Offset" is the
-number of bytes read. "Spare" is the number of bytes available for writing.
+    read. "Left" is the number of bytes available for reading. "Offset" is the
+    number of bytes read. "Spare" is the number of bytes available for writing.
     "Limit" it the total number of bytes allocated (size + spare).
-begin            out             in               end
-  |---------------v---------------v----------------|
-  |.....offset....|......left.....|.....spare......|
-  |..............size.............|
-  |......................limit.....................|
+    begin            out             in               end
+    |---------------v---------------v----------------|
+    |.....offset....|......left.....|.....spare......|
+    |..............size.............|
+    |......................limit.....................|
 */
 
 struct Buffer
 {
     Buffer(uint8_t * ptr, size_t size, bool at_end = false) { Init(ptr, size, at_end); }
+    Buffer(const Buffer &)             = delete;
+    Buffer & operator=(const Buffer &) = delete;
     ~Buffer() { Finish(); }
     void Init(uint8_t * ptr, size_t size, bool at_end = false)
     {
@@ -67,6 +68,7 @@ struct Buffer
             delete[] this->pBegin;
         }
         this->pBegin = this->pEnd = this->pIn = this->pOut = nullptr;
+        this->mAllocated                                   = false;
     }
 
     /** Reset the pointers to initial position. Zero write, zero read. */
@@ -226,3 +228,4 @@ CHIP_ERROR Find(Buffer & in, uint16_t id, Argument & arg);
 } // namespace Silabs
 } // namespace DeviceLayer
 } // namespace chip
+ 
