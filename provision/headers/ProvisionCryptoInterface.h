@@ -18,8 +18,8 @@ struct IProvisionCrypto
 {
     virtual ~IProvisionCrypto() = default;
 
-    virtual CHIP_ERROR GenerateRandom(MutableByteSpan & output)                 = 0;
-    virtual CHIP_ERROR Hash256(const ByteSpan & input, MutableByteSpan & output) = 0;
+    virtual CHIP_ERROR GenerateRandom(MutableByteSpan & output)                                            = 0;
+    virtual CHIP_ERROR Hash256(const ByteSpan & input, MutableByteSpan & output)                           = 0;
     virtual CHIP_ERROR ImportDeviceAttestationKey(const ByteSpan & key)                                    = 0;
     virtual CHIP_ERROR GenerateDeviceAttestationCSR(uint16_t vid, uint16_t pid, const CharSpan & commonName,
                                                     MutableCharSpan & csr)                                 = 0;

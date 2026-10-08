@@ -46,37 +46,40 @@ begin            out             in               end
 struct Buffer
 {
     Buffer(uint8_t * ptr, size_t size, bool at_end = false) { Init(ptr, size, at_end); }
-
+    Buffer(const Buffer &)             = delete;
+    Buffer & operator=(const Buffer &) = delete;
+    ~Buffer() { Finish(); }
     void Init(uint8_t * ptr, size_t size, bool at_end = false)
     {
         Finish();
         if (nullptr == ptr)
         {
-            ptr       = new uint8_t[size];
-            allocated = true;
+            ptr              = new uint8_t[size];
+            this->mAllocated = true;
         }
-        this->begin = ptr;
-        this->end   = ptr + size;
-        this->in    = at_end ? end : begin;
-        this->out   = ptr;
+        this->pBegin = ptr;
+        this->pEnd   = ptr + size;
+        this->pIn    = at_end ? this->pEnd : this->pBegin;
+        this->pOut   = ptr;
     }
     void Finish()
     {
-        if (this->begin && allocated)
+        if (this->pBegin && this->mAllocated)
         {
-            delete[] this->begin;
+            delete[] this->pBegin;
         }
-        this->begin = this->end = this->in = this->out = nullptr;
+        this->pBegin = this->pEnd = this->pIn = this->pOut = nullptr;
+        this->mAllocated                                   = false;
     }
 
     /** Reset the pointers to initial position. Zero write, zero read. */
-    void Clear() { this->in = this->out = this->begin; }
+    void Clear() { this->pIn = this->pOut = this->pBegin; }
     /** @return Total size allocated for the buffer. */
-    size_t Limit() { return static_cast<size_t>((this->end > this->begin) ? (this->end - this->begin) : 0); }
+    size_t Limit() { return static_cast<size_t>((this->pEnd > this->pBegin) ? (this->pEnd - this->pBegin) : 0); }
     /** @return Number of bytes written. */
-    size_t Size() { return static_cast<size_t>((this->in > this->begin) ? (this->in - this->begin) : 0); }
+    size_t Size() { return static_cast<size_t>((this->pIn > this->pBegin) ? (this->pIn - this->pBegin) : 0); }
     /** @return Number of bytes read. */
-    size_t Offset() { return static_cast<size_t>((this->out > this->begin) ? (this->out - this->begin) : 0); }
+    size_t Offset() { return static_cast<size_t>((this->pOut > this->pBegin) ? (this->pOut - this->pBegin) : 0); }
     /** @return Number of bytes available for reading. */
     size_t Left() { return this->Size() - this->Offset(); }
     /** @return Number of bytes available for writing. */
@@ -94,11 +97,11 @@ struct Buffer
     CHIP_ERROR Get(uint8_t * out, size_t size);
     CHIP_ERROR Get(Buffer & into, size_t size);
 
-    uint8_t * begin = nullptr;
-    uint8_t * end   = nullptr;
-    uint8_t * in    = nullptr;
-    uint8_t * out   = nullptr;
-    bool allocated  = false;
+    uint8_t * pBegin = nullptr;
+    uint8_t * pEnd   = nullptr;
+    uint8_t * pIn    = nullptr;
+    uint8_t * pOut   = nullptr;
+    bool mAllocated  = false;
 };
 
 //------------------------------------------------------------------------------
@@ -179,7 +182,7 @@ struct Argument : public Buffer
         State_Ready = 5,
     };
 
-    Argument(uint8_t * ptr = nullptr, size_t size = 0) : Buffer(ptr, size) { Reset(); }
+    Argument(uint8_t * ptr = nullptr, size_t sz = 0) : Buffer(ptr, sz) { Reset(); }
 
     void Reset()
     {
@@ -215,7 +218,7 @@ struct Argument : public Buffer
 CHIP_ERROR Encode(uint16_t id, uint8_t * value, Buffer & out);
 CHIP_ERROR Encode(uint16_t id, uint16_t * value, Buffer & out);
 CHIP_ERROR Encode(uint16_t id, uint32_t * value, Buffer & out);
-CHIP_ERROR Encode(uint16_t id, const uint8_t * value, size_t size, Buffer & out);
+CHIP_ERROR Encode(uint16_t id, const uint8_t * value, size_t sz, Buffer & out);
 CHIP_ERROR Decode(Buffer & in, Argument & arg);
 CHIP_ERROR Find(Buffer & in, uint16_t id, Argument & arg);
 

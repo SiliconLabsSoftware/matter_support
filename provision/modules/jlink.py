@@ -21,14 +21,18 @@ class JLinkChannel(_base.Channel):
         self.port = conn.port or JLinkChannel.DEFAULT_PORT
         self.serial_num = conn.serial_num
         self.part_number = args.str(ID.kDevice)
-        lib_path = args.str(ID.kPylinkLib)
-        if lib_path is None:
-            self.link = pylink.JLink()
-        else:
-            self.link = pylink.JLink(lib=pylink.library.Library(dllpath=lib_path))
+        self.lib_path = args.str(ID.kPylinkLib)
+        # The J-Link DLL is loaded in open(). Loading it before commander
+        # flashes the device (rps load) leaves the DLL unable to attach afterwards.
+        self.link = None
         self.support_dir = paths.support()
 
     def open(self):
+        if self.link is None:
+            if self.lib_path is None:
+                self.link = pylink.JLink()
+            else:
+                self.link = pylink.JLink(lib=pylink.library.Library(dllpath=self.lib_path))
         if self.serial_num:
             print("* Open SERIAL connection {} to {}\n".format(self.serial_num, self.part_number))
             self.link.open(serial_no=self.serial_num)
