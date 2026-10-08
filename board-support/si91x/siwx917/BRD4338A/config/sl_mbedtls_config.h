@@ -112,7 +112,7 @@
 #include "sli_mbedtls_omnipresent.h"
 
 #if SL_MBEDTLS_DRIVERS_ENABLED
-  #include "sli_mbedtls_acceleration.h"
+  #include "sli_psa_acceleration.h"
 #endif
 
 #include "sl_mbedtls_device_config.h"

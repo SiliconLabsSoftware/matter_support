@@ -69,8 +69,13 @@
 #include "tinycrypt/ecc.h"
 #include "tinycrypt/tinycrypt_util.h"
 
+#include "mbedtls/version.h"
 #include "mbedtls/platform_util.h"
+#if (MBEDTLS_VERSION_NUMBER >= 0x04000000)
+#include "mbedtls/private/sha256.h"
+#else
 #include "mbedtls/sha256.h"
+#endif
 
 #if defined MBEDTLS_OPTIMIZE_TINYCRYPT_ASM
 #ifndef asm
@@ -78,8 +83,18 @@
 #endif
 #endif /* MBEDTLS_OPTIMIZE_TINYCRYPT_ASM */
 
-#if (MBEDTLS_VERSION_NUMBER >= 0x03000000)
+#if (MBEDTLS_VERSION_NUMBER >= 0x03000000) && (MBEDTLS_VERSION_NUMBER < 0x04000000)
 #include "mbedtls/compat-2.x.h"
+#endif
+
+#if (MBEDTLS_VERSION_NUMBER >= 0x04000000)
+#define MBEDTLS_SHA256_STARTS mbedtls_sha256_starts
+#define MBEDTLS_SHA256_UPDATE mbedtls_sha256_update
+#define MBEDTLS_SHA256_FINISH mbedtls_sha256_finish
+#else
+#define MBEDTLS_SHA256_STARTS mbedtls_sha256_starts_ret
+#define MBEDTLS_SHA256_UPDATE mbedtls_sha256_update_ret
+#define MBEDTLS_SHA256_FINISH mbedtls_sha256_finish_ret
 #endif
 
 /* Parameters for curve NIST P-256 aka secp256r1 */
@@ -118,7 +133,7 @@ static int uECC_update_param_sha256(mbedtls_sha256_context *ctx,
 	uint8_t bytes[NUM_ECC_BYTES];
 
 	uECC_vli_nativeToBytes(bytes, NUM_ECC_BYTES, val);
-	return mbedtls_sha256_update_ret(ctx, bytes, NUM_ECC_BYTES);
+	return MBEDTLS_SHA256_UPDATE(ctx, bytes, NUM_ECC_BYTES);
 }
 
 static int uECC_compute_param_sha256(unsigned char output[32])
@@ -128,7 +143,7 @@ static int uECC_compute_param_sha256(unsigned char output[32])
 
 	mbedtls_sha256_init( &ctx );
 
-	if (mbedtls_sha256_starts_ret(&ctx, 0) != 0) {
+	if (MBEDTLS_SHA256_STARTS(&ctx, 0) != 0) {
 		goto exit;
 	}
 
@@ -141,7 +156,7 @@ static int uECC_compute_param_sha256(unsigned char output[32])
 		goto exit;
 	}
 
-	if (mbedtls_sha256_finish_ret(&ctx, output) != 0) {
+	if (MBEDTLS_SHA256_FINISH(&ctx, output) != 0) {
 		goto exit;
 	}
 
