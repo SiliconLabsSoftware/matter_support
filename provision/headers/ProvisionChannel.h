@@ -16,37 +16,26 @@
  */
 #pragma once
 
-#include <headers/ProvisionChannel.h>
-#include <headers/ProvisionProtocol.h>
-#include <headers/ProvisionStorage.h>
 #include <lib/core/CHIPError.h>
+#include <stddef.h>
+#include <stdint.h>
 
 namespace chip {
 namespace DeviceLayer {
 namespace Silabs {
 namespace Provision {
 
-class Manager
+class Channel
 {
 public:
+    Channel()  = default;
+    ~Channel() = default;
+
     CHIP_ERROR Init();
-    bool Step();
-    bool IsProvisionRequired();
-    CHIP_ERROR SetProvisionRequired(bool required);
-    Storage & GetStorage() { return mStore; }
-    static Manager & GetInstance();
+    CHIP_ERROR Read(uint8_t * buffer, size_t buffer_length, size_t & bytes_read);
+    CHIP_ERROR Write(const uint8_t * buffer, size_t buffer_length);
 
-private:
-    bool ProcessCommand(ByteSpan & request, MutableByteSpan & response);
-
-    Storage mStore;
-    Channel mChannel;
-#if defined(SILABS_PROVISION_PROTOCOL_V1) && SILABS_PROVISION_PROTOCOL_V1
-    Protocol1 mProtocol1;
-#endif
-    Protocol2 mProtocol2;
-    bool mProvisionRequested = true;
-    bool mResetPending       = false;
+    static CHIP_ERROR Update(uint16_t handle);
 };
 
 } // namespace Provision
