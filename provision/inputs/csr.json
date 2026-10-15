@@ -1,5 +1,5 @@
 {
-    "version": "1.0",
+    "version": "2.10",
     "matter": {
         "csr": true,
         "vendor_id": 65521,

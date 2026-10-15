@@ -35,6 +35,9 @@ efr32mg24:
         - version: "2.9"
           default: "efr32mg24_mfd.s37"
           zephyr: "zephyr_xg24.hex"
+        - version: "2.10"
+          default: "efr32mg24_core.s37"
+          zephyr: "zephyr_xg24_core.hex"
 
 efr32mg26:
     zephyr:
@@ -67,6 +70,9 @@ efr32mg26:
         - version: "2.9"
           default: "efr32mg26_mfd.s37"
           zephyr: "zephyr_xg26.hex"
+        - version: "2.10"
+          default: "efr32mg26_core.s37"
+          zephyr: "zephyr_xg26_core.hex"
 
 mgm24:
     zephyr:
@@ -105,6 +111,9 @@ mgm24:
         - version: "2.9"
           default: "efr32mg24_mfd.s37"
           zephyr: "zephyr_xg24.hex"
+        - version: "2.10"
+          default: "efr32mg24_core.s37"
+          zephyr: "zephyr_xg24_core.hex"
 
 mgm26:
     zephyr:
@@ -137,6 +146,9 @@ mgm26:
         - version: "2.9"
           default: "efr32mg26_mfd.s37"
           zephyr: "zephyr_xg26.hex"
+        - version: "2.10"
+          default: "efr32mg26_core.s37"
+          zephyr: "zephyr_xg26_core.hex"
 
 si917y:
     zephyr:
@@ -166,6 +178,9 @@ si917y:
         - version: "2.9"
           default: "si917y_mfd.rps"
           zephyr: "zephyr_siwx917.rps"
+        - version: "2.10"
+          default: "si917y_core.rps"
+          zephyr: "zephyr_siwx917_core.rps"
 
 si917:
     zephyr:
@@ -201,6 +216,9 @@ si917:
         - version: "2.9"
           default: "si917_mfd.rps"
           zephyr: "zephyr_siwx917.rps"
+        - version: "2.10"
+          default: "si917_core.rps"
+          zephyr: "zephyr_siwx917_core.rps"
 
 # l implies 4mb part.
 simg301l:
@@ -228,6 +246,8 @@ simg301l:
           file: "sixg3l_csr_oids.s37"
         - version: "2.9"
           file: "sixg3l_mfd.s37"
+        - version: "2.10"
+          default: "sixg3l_core.s37"
 
 # w implies 3mb part.
 simg301w:
@@ -251,6 +271,8 @@ simg301w:
           file: "sixg3w_csr_oids.s37"
         - version: "2.9"
           file: "sixg3w_mfd.s37"
+        - version: "2.10"
+          default: "sixg3w_core.s37"
 
 # k implies 2mb part.
 simg301k:
@@ -270,6 +292,8 @@ simg301k:
           file: "sixg3k_csr_oids.s37"
         - version: "2.9"
           file: "sixg3k_mfd.s37"
+        - version: "2.10"
+          default: "sixg3k_core.s37"
 
 # x is currently used for 8mb parts, however there are x parts of every size so this is temporary (x means external flash).
 simg301x:
@@ -289,3 +313,5 @@ simg301x:
           file: "sixg3x8m_csr_oids.s37"
         - version: "2.9"
           file: "sixg3x8m_mfd.s37"
+        - version: "2.10"
+          default: "sixg3x8m_core.s37"
