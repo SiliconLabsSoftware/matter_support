@@ -111,10 +111,6 @@
 
 #include "sli_mbedtls_omnipresent.h"
 
-#if SL_MBEDTLS_DRIVERS_ENABLED
-  #include "sli_mbedtls_acceleration.h"
-#endif
-
 #include "sl_mbedtls_device_config.h"
 
 // Include transformation logic to apply CMSIS-config configuration options to

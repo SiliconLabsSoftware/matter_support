@@ -21,7 +21,7 @@
 #include "sl_gpio.h"
 #include "gpiointerrupt.h"
 #include "sl_iostream_rtt.h"
-#include "sl_mbedtls.h"
+#include "sl_psa_crypto.h"
 #include "sl_ot_rtos_adaptation.h"
 #include "sl_simple_button_instances.h"
 #if defined(CONFIG_ENABLE_UART)
@@ -90,9 +90,9 @@ void sl_service_init(void)
 {
   sl_board_configure_vcom();
   sl_hfxo_manager_init();
-  sl_mbedtls_init();
-  psa_crypto_init();
   sl_se_init();
+  sl_psa_crypto_init();
+  psa_crypto_init();
   sli_protocol_crypto_init();
   sli_crypto_init();
   sli_aes_seed_mask();
