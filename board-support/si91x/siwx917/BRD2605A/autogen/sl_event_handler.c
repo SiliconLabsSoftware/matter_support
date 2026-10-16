@@ -13,7 +13,7 @@
 #include "sl_si91x_rgb_led_instances.h"
 #include "sl_ulp_timer_instances.h"
 #include "sl_iostream_rtt.h"
-#include "sl_mbedtls.h"
+#include "sl_psa_crypto.h"
 #include "sl_iostream_init_instances.h"
 #include "cmsis_os2.h"
 #include "sl_iostream_handles.h"
@@ -64,7 +64,7 @@ void sl_service_init(void)
   sl_si91x_power_manager_init();
   sli_si91x_power_manager_configure_ram_and_peripheral();
 #endif // SL_ICD_ENABLED
-  sl_mbedtls_init();
+  sl_psa_crypto_init();
   sl_iostream_init_instances_stage_1();
   sl_iostream_init_instances_stage_2();
 }
