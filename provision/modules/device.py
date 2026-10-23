@@ -65,8 +65,6 @@ class Device:
             for y in self._list(info, 'firmware'):
                 v = self._str(y, 'version')
                 prefix = v[:version_len]
-                if prefix > version:
-                    break
                 if version == prefix:
                     image = self._firmware_file(y, rtos)
                     rtt_addr = self._int(y, 'rtt_addr', family_rtt_addr)
