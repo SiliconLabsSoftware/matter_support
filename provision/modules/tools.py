@@ -11,6 +11,13 @@ import modules.util as _util
 from ecdsa.curves import NIST256p
 from modules.parameters import ID
 
+# Boards with external flash that need --pinset 2 for manufacturing erase userdata.
+ERASE_USERDATA_PINSET2_BOARDS = {
+    'BRD9084A',
+    'BRD9084B',
+    'BRD9084C',
+    'BRD9084D',
+}
 
 class Commander:
 
@@ -52,7 +59,11 @@ class Commander:
         image_path = _util.Paths.quote(path)
         _, ext = os.path.splitext(path)
         if self.auto and ('si917' == dev):
-            self.execute(['manufacturing', 'erase', 'userdata'], False, True)
+            erase_args = ['manufacturing', 'erase', 'userdata']
+            boards = self.getBoardInfo()
+            if any(b in ERASE_USERDATA_PINSET2_BOARDS for b in boards):
+                erase_args.extend(['--pinset', '2'])
+            self.execute(erase_args, False, True)
         if '.rps' == ext:
             args = ['rps', 'load', image_path]
             # Si917 needs time to start
@@ -62,6 +73,23 @@ class Commander:
         if re.match(r'^si.g301', dev) and self.no_close:
             args.append('--noclose')
         self.execute(args, False, True)
+
+    def getBoardInfo(self):
+        """Return board part numbers from adapter probe."""
+        args = ['commander', 'adapter', 'probe']
+        if self.conn is not None:
+            if self.conn.serial_num:
+                args.extend(['--serialno', self.conn.serial_num])
+            elif self.conn.ip_addr:
+                if self.conn.port:
+                    args.extend(['--ip', '{}:{}'.format(self.conn.ip_addr, self.conn.port)])
+                else:
+                    args.extend(['--ip', self.conn.ip_addr])
+        res = _util.execute(args, True, False)
+        if res is None:
+            return []
+        text = res.decode('utf-8') if isinstance(res, bytes) else str(res)
+        return [m.upper() for m in re.findall(r'\b(BRD\d{4}[A-Z])\b', text, re.IGNORECASE)]
 
     def reset(self):
         self.execute(['device', 'reset'], False, False)
