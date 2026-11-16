@@ -152,8 +152,8 @@ mgm26:
 
 si917y:
     zephyr:
-        flash_addr: 0x003e1000
-        flash_size: 32768
+        flash_addr: 0x003f4000
+        flash_size: 49152
         rtt_addr: 0xc50
     alias: [siwg917y]
     override: true
@@ -184,8 +184,8 @@ si917y:
 
 si917:
     zephyr:
-        flash_addr: 0x003e1000
-        flash_size: 32768
+        flash_addr: 0x003f4000
+        flash_size: 49152
         rtt_addr: 0xc50
     alias: [siwg917]
     override: true
