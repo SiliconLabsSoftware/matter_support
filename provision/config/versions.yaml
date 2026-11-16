@@ -144,3 +144,13 @@
   summary: |-
       - Manufacturing date format changed to YYYYMMDD.
       - Series 3 credentials address changed to prevent conflict with manufacturing tokens.
+
+- version: "2.10"
+  date: "2026-10-04"
+  supports:
+      - release_2.11-1.7
+  module: "v2_0"
+  summary: |-
+      - Provisioning Lib refactored to a core lib per Cortex ABI (currently m4 and m33)
+      - Abstracted the Provision Storage writer and reader, and Provision Channels.
+      - Generator firmware is built using the core lib rather than from source.

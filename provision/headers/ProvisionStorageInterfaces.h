@@ -34,31 +34,31 @@ namespace Provision {
  */
 struct IProvisionStorageReader
 {
-    virtual ~IProvisionStorageReader()                                                   = default;
-    virtual CHIP_ERROR GetSerialNumber(char * value, size_t max)                         = 0;
-    virtual CHIP_ERROR GetVendorId(uint16_t & value)                                     = 0;
-    virtual CHIP_ERROR GetVendorName(char * value, size_t max)                           = 0;
-    virtual CHIP_ERROR GetProductId(uint16_t & value)                                    = 0;
-    virtual CHIP_ERROR GetProductName(char * value, size_t max)                          = 0;
-    virtual CHIP_ERROR GetProductLabel(char * value, size_t max)                         = 0;
-    virtual CHIP_ERROR GetProductURL(char * value, size_t max)                           = 0;
-    virtual CHIP_ERROR GetPartNumber(char * value, size_t max)                           = 0;
-    virtual CHIP_ERROR GetHardwareVersion(uint16_t & value)                              = 0;
-    virtual CHIP_ERROR GetHardwareVersionString(char * value, size_t max)                = 0;
-    virtual CHIP_ERROR GetManufacturingDate(uint8_t * value, size_t max, size_t & size)  = 0;
-    virtual CHIP_ERROR GetPersistentUniqueId(uint8_t * value, size_t max, size_t & size) = 0;
-    virtual CHIP_ERROR GetSetupDiscriminator(uint16_t & value)                           = 0;
-    virtual CHIP_ERROR GetSpake2pIterationCount(uint32_t & value)                        = 0;
-    virtual CHIP_ERROR GetSpake2pSalt(char * value, size_t max, size_t & size)           = 0;
-    virtual CHIP_ERROR GetSpake2pVerifier(char * value, size_t max, size_t & size)       = 0;
-    virtual CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size)       = 0;
-    virtual CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value)                   = 0;
-    virtual CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value)              = 0;
-    virtual CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value)    = 0;
-    virtual CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value)                 = 0;
-    virtual CHIP_ERROR GetProvisionVersion(char * value, size_t max, size_t & size)      = 0;
-    virtual CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & value) = 0;
-    virtual CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value)      = 0;
+    virtual ~IProvisionStorageReader()                                                               = default;
+    virtual CHIP_ERROR GetSerialNumber(char * value, size_t max)                                     = 0;
+    virtual CHIP_ERROR GetVendorId(uint16_t & value)                                                 = 0;
+    virtual CHIP_ERROR GetVendorName(char * value, size_t max)                                       = 0;
+    virtual CHIP_ERROR GetProductId(uint16_t & value)                                                = 0;
+    virtual CHIP_ERROR GetProductName(char * value, size_t max)                                      = 0;
+    virtual CHIP_ERROR GetProductLabel(char * value, size_t max)                                     = 0;
+    virtual CHIP_ERROR GetProductURL(char * value, size_t max)                                       = 0;
+    virtual CHIP_ERROR GetPartNumber(char * value, size_t max)                                       = 0;
+    virtual CHIP_ERROR GetHardwareVersion(uint16_t & value)                                          = 0;
+    virtual CHIP_ERROR GetHardwareVersionString(char * value, size_t max)                            = 0;
+    virtual CHIP_ERROR GetManufacturingDate(uint8_t * value, size_t max, size_t & size)              = 0;
+    virtual CHIP_ERROR GetPersistentUniqueId(uint8_t * value, size_t max, size_t & size)             = 0;
+    virtual CHIP_ERROR GetSetupDiscriminator(uint16_t & value)                                       = 0;
+    virtual CHIP_ERROR GetSpake2pIterationCount(uint32_t & value)                                    = 0;
+    virtual CHIP_ERROR GetSpake2pSalt(char * value, size_t max, size_t & size)                       = 0;
+    virtual CHIP_ERROR GetSpake2pVerifier(char * value, size_t max, size_t & size)                   = 0;
+    virtual CHIP_ERROR GetSetupPayload(uint8_t * value, size_t max, size_t & size)                   = 0;
+    virtual CHIP_ERROR GetFirmwareInformation(MutableByteSpan & value)                               = 0;
+    virtual CHIP_ERROR GetCertificationDeclaration(MutableByteSpan & value)                          = 0;
+    virtual CHIP_ERROR GetProductAttestationIntermediateCert(MutableByteSpan & value)                = 0;
+    virtual CHIP_ERROR GetDeviceAttestationCert(MutableByteSpan & value)                             = 0;
+    virtual CHIP_ERROR GetProvisionVersion(char * value, size_t max, size_t & size)                  = 0;
+    virtual CHIP_ERROR GetTestEventTriggerKey(MutableByteSpan & value)                               = 0;
+    virtual CHIP_ERROR GetOtaTlvEncryptionKeyId(uint32_t & value)                                    = 0;
     virtual CHIP_ERROR DecryptUsingOtaTlvEncryptionKey(MutableByteSpan & block, uint32_t & ivOffset) = 0;
 };
 
@@ -96,8 +96,8 @@ struct IProvisionStorageWriter
     virtual CHIP_ERROR SetProductAttestationIntermediateCert(const ByteSpan & value) = 0;
     virtual CHIP_ERROR SetDeviceAttestationCert(const ByteSpan & value)              = 0;
     virtual CHIP_ERROR SetProvisionVersion(const char * value, size_t len)           = 0;
-    virtual CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value) = 0;
-    virtual CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value) = 0;
+    virtual CHIP_ERROR SetTestEventTriggerKey(const ByteSpan & value)                = 0;
+    virtual CHIP_ERROR SetOtaTlvEncryptionKey(const ByteSpan & value)                = 0;
 
     // Provisioning/platform lifecycle controls. These are only required by
     // consumers that enable provisioning writes, such as GFW.
@@ -107,10 +107,10 @@ struct IProvisionStorageWriter
         (void) size;
         return CHIP_ERROR_NOT_IMPLEMENTED;
     }
-    virtual CHIP_ERROR SetCredentialsBaseAddress(uint32_t addr)                     = 0;
-    virtual CHIP_ERROR GetCredentialsBaseAddress(uint32_t & addr)                   = 0;
-    virtual CHIP_ERROR SetProvisionRequest(bool value)                              = 0;
-    virtual CHIP_ERROR GetProvisionRequest(bool & value)                            = 0;
+    virtual CHIP_ERROR SetCredentialsBaseAddress(uint32_t addr)   = 0;
+    virtual CHIP_ERROR GetCredentialsBaseAddress(uint32_t & addr) = 0;
+    virtual CHIP_ERROR SetProvisionRequest(bool value)            = 0;
+    virtual CHIP_ERROR GetProvisionRequest(bool & value)          = 0;
 
     virtual CHIP_ERROR Commit() = 0;
 };
