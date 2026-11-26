@@ -37,9 +37,12 @@
 
 
 typedef struct {
-  uint8_t pin;        ///< Pin number of the LED.
-  uint8_t port;       ///< Port number of the LED.
-  uint8_t led_number; ///< LED number for identification.
+  uint8_t pin;            ///< Pin number of the LED.
+  uint8_t port;           ///< Port number of the LED.
+  uint8_t led_number;     ///< LED number for identification.
+  uint8_t drive_strength; ///< GPIO drive strength.
+  uint8_t dout;           ///< Initial GPIO output level.
+  uint8_t slew_rate;      ///< GPIO slew rate.
 } sl_led_t;
 
 extern const sl_led_t led_led0;
